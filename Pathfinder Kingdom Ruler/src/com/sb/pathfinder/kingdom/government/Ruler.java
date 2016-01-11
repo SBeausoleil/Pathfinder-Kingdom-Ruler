@@ -1,69 +1,97 @@
 package com.sb.pathfinder.kingdom.government;
 
-import java.util.HashSet;
+import java.util.LinkedList;
 
 import com.sb.pathfinder.kingdom.Kingdom;
+import com.sb.pathfinder.kingdom.KingdomModifier;
+import com.sb.pathfinder.kingdom.SavedKingdomModifier;
 import com.sb.rpg.RPGCharacter;
 
 public class Ruler extends LeadershipRole {
 
-    private HashSet<Kingdom.Attribute> affectedAttributes;
-
-    public Ruler(String title, RPGCharacter character, boolean unavailable) {
-	super(title, character, unavailable);
-	affectedAttributes = new HashSet<Kingdom.Attribute>();
+    public Ruler(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
+	super(title, character, available, kingdom);
+	setBonus(new RulerBonus());
+	setPenalty(new RulerPenalty());
     }
 
-    @Override
-    public void applyTo(Kingdom kingdom) {
-	calculateChange();
-	applyToKingdom(kingdom, change);
-    }
+    public class RulerBonus extends SavedKingdomModifier {
 
-    @Override
-    public void removeFrom(Kingdom kingdom) {
-	applyToKingdom(kingdom, -change);
-    }
-    
-    private void applyToKingdom(Kingdom kingdom, int change) {
-	for (Kingdom.Attribute attr : affectedAttributes) {
-	    switch (attr) {
-	    case Economy:
-		kingdom.modEconomy(change);
-		break;
-	    case Loyalty:
-		kingdom.modLoyalty(change);
-		break;
-	    case Stability:
-		kingdom.modStability(change);
-		break;
+	private LinkedList<Kingdom.Attribute> modifiedAttributes;
+
+	public RulerBonus() {
+	    modifiedAttributes = new LinkedList<>();
+	}
+
+	/**
+	 * Add a kingdom attribute to be modified by the ruler.
+	 * The caller should always call removeFrom() before calling this method to avoid bugs.
+	 * 
+	 * @param attribute
+	 *            can be a Kingdom.Attribute: Economy, Loyalty, or Stability.
+	 * @return <tt>true</tt> if the attributes list has been modified.
+	 */
+	public boolean addKingdomAttribute(Kingdom.Attribute attribute) {
+	    if ((attribute == Kingdom.Attribute.Economy
+		    || attribute == Kingdom.Attribute.Loyalty
+		    || attribute == Kingdom.Attribute.Stability)
+		    && !modifiedAttributes.contains(attribute)) {
+		modifiedAttributes.add(attribute);
+		return true;
+	    }
+	    return false;
+	}
+
+	/**
+	 * Removes a kingdom attribute to be modified by this role.
+	 * @param attribute
+	 * @return <tt>true</tt> if the modified attributes list was modified.
+	 */
+	public boolean removeKingdomAttribute(Kingdom.Attribute attribute) {
+	    return modifiedAttributes.remove(attribute);
+	}
+
+	@Override
+	public void applyTo(Kingdom kingdom) {
+	    change = RPGCharacter.getAttributeModifier(character.getCharisma());
+	    modify(kingdom, change);
+	}
+
+	@Override
+	public void removeFrom(Kingdom kingdom) {
+	    modify(kingdom, -change);
+	}
+
+	private void modify(Kingdom kingdom, int mod) {
+	    for (Kingdom.Attribute attr : modifiedAttributes) {
+		switch (attr) {
+		case Economy:
+		    kingdom.modEconomy(mod);
+		    break;
+		case Loyalty:
+		    kingdom.modEconomy(mod);
+		    break;
+		case Stability:
+		    kingdom.modStability(mod);
+		    break;
+		}
 	    }
 	}
     }
 
-    public boolean addAffectedAttribute(Kingdom.Attribute attribute, Kingdom kingdom) {
-	if (affectedAttributes.contains(attribute))
-	    return false;
-	removeFrom(kingdom);
-	affectedAttributes.add(attribute);
-	applyTo(kingdom);
-	return true;
-    }
+    private class RulerPenalty implements KingdomModifier {
 
-    public boolean removeAffectedAttribute(Kingdom.Attribute attribute, Kingdom kingdom) {
-	if (!affectedAttributes.contains(attribute))
-	    return false;
-	removeFrom(kingdom);
-	affectedAttributes.remove(attribute);
-	applyTo(kingdom);
-	return true;
-    }
-    
-    @Override
-    protected void calculateChange() {
-	if (isUnavailable())
-	    change = 0;
-	else
-	    change = RPGCharacter.getAttributeModifier(character.getCharisma());
+	@Override
+	public void applyTo(Kingdom kingdom) {
+	    // TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void removeFrom(Kingdom kingdom) {
+	    // TODO Auto-generated method stub
+
+	}
+
     }
 }

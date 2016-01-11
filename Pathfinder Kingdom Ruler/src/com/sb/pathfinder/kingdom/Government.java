@@ -28,6 +28,7 @@ public class Government implements KingdomModifier, Serializable {
     private Treasurer treasurer;
     private LinkedList<Viceroy> viceroys;
     private Warden warden;
+    
     @Override
     public void applyTo(Kingdom kingdom) {
 	// TODO Auto-generated method stub

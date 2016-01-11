@@ -6,10 +6,11 @@ import com.sb.rpg.RPGCharacter;
 
 /**
  * Represents a leadership role in the government of a kingdom.
+ * Can be used as-is to create quick instances of leadership role.
  * 
  * @author Samuel Beausoleil
  */
-public abstract class LeadershipRole implements KingdomModifier {
+public class LeadershipRole {
 
     /**
      * The title of the role.
@@ -23,21 +24,44 @@ public abstract class LeadershipRole implements KingdomModifier {
     protected RPGCharacter character;
 
     /**
-     * Indicates if the current character occupying this role is unavailable to fulfill their duty.
+     * Indicates if the current character occupying this role is available to fulfill their duties.
      */
-    protected boolean unavailable;
+    protected boolean available;
 
     /**
-     * Records the size of the changes brought by this role.
-     * This field is used for reverting changes. It is reccomended to update it every times as the
-     * first step of the <code>applyTo()</code> abstract function.
+     * The kingdom affected by this role.
      */
-    protected int change;
+    protected Kingdom kingdom;
 
-    public LeadershipRole(String title, RPGCharacter character, boolean unavailable) {
+    /**
+     * The bonus applied to a kingdom.
+     * The bonus is to be applied when a kingdom has this role fulfilled.
+     */
+    protected KingdomModifier bonus;
+
+    /**
+     * The penalty applied to a kingdom.
+     * The penalty is to be applied when a kingdom does not have this role fulfilled.
+     */
+    protected KingdomModifier penalty;
+
+    /**
+     * The current effect applied on the kingdom.
+     */
+    private KingdomModifier currentEffect;
+
+    public LeadershipRole(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
+	this(title, character, available, kingdom, null, null);
+    }
+
+    public LeadershipRole(String title, RPGCharacter character, boolean available, Kingdom kingdom,
+	    KingdomModifier bonus, KingdomModifier penalty) {
 	this.title = title;
 	this.character = character;
-	this.unavailable = unavailable;
+	this.available = available;
+	this.kingdom = kingdom;
+	this.bonus = bonus;
+	this.penalty = penalty;
     }
 
     /**
@@ -79,62 +103,97 @@ public abstract class LeadershipRole implements KingdomModifier {
     }
 
     /**
-     * Returns the unavailable.
+     * Returns the bonus.
      * 
-     * @return the unavailable
+     * @return the bonus
      */
-    public boolean isUnavailable() {
-	return character == null || unavailable;
+    public KingdomModifier getBonus() {
+	return bonus;
     }
 
     /**
-     * Sets the value of unavailable to that of the parameter.
+     * Sets the value of bonus to that of the parameter.
      * 
-     * @param unavailable
-     *            the unavailable to set
+     * @param bonus
+     *            the bonus to set
      */
-    public void setUnavailable(boolean unavailable) {
-	this.unavailable = unavailable;
+    public void setBonus(KingdomModifier bonus) {
+	this.bonus = bonus;
     }
 
     /**
-     * Checks if the character holding the role has the Prestige feat.
+     * Returns the penalty.
      * 
-     * @return <tt>true</tt> if the character has a feat named "prestige".
-     *         <tt>false</tt> if the character is null or does not have the Prestige feat.
+     * @return the penalty
      */
-    public boolean hasPrestige() {
-	if (character == null)
-	    return false;
-
-	return character.getFeats().hasFeat("prestige");
+    public KingdomModifier getPenalty() {
+	return penalty;
     }
 
     /**
-     * Forces an updates of the stats provided by this leadership role.
-     * Starts by removing the current effects of the role by calling <code>removeFrom()</code>
-     * then applying the updated statistics of the character in the role by calling
-     * <code>applyTo()</code>.
+     * Sets the value of penalty to that of the parameter.
      * 
-     * @param kingdom
+     * @param penalty
+     *            the penalty to set
      */
-    public void update(Kingdom kingdom) {
-	removeFrom(kingdom);
-	applyTo(kingdom);
+    public void setPenalty(KingdomModifier penalty) {
+	this.penalty = penalty;
     }
 
     /**
-     * Returns the change.
+     * Returns the available.
      * 
-     * @return the change
+     * @return the available
      */
-    public int getChange() {
-	return change;
+    public boolean isAvailable() {
+	return available;
     }
 
     /**
-     * Calculates the value of the changes brought by this role and applies it to the
-     * <tt>change</tt> field.
+     * Sets the value of available to that of the parameter.
+     * 
+     * @param available
+     *            the available to set
      */
-    protected abstract void calculateChange();
+    public void setAvailable(boolean available) {
+	this.available = available;
+    }
+
+    /**
+     * Checks if there is currently a character occupying this role.
+     * 
+     * @return <tt>true</tt> if <code>character != null</code>.
+     */
+    public boolean isOccupied() {
+	return character != null;
+    }
+
+    /**
+     * Checks if there is a character present to apply this role's bonus.
+     * 
+     * @return <tt>true</tt> if the role is currently occupied and is available.
+     */
+    public boolean isPresent() {
+	return isOccupied() && isAvailable();
+    }
+
+    /**
+     * Updates the effects of this role that is applied on the kingdom.
+     * Starts by removing the current effect(s), then checks which set of effects should be applied.
+     * 
+     * @throws NullPointerException
+     *             if the bonus or the penalty of the kingdom was not set before calling this
+     *             method.
+     */
+    public void apply() {
+	if (currentEffect != null)
+	    currentEffect.removeFrom(kingdom);
+
+	if (isPresent())
+	    currentEffect = bonus;
+	else
+	    currentEffect = penalty;
+
+	currentEffect.applyTo(kingdom);
+    }
 }

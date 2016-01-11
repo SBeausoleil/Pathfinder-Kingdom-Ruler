@@ -28,6 +28,4 @@ public abstract class Building implements KingdomModifier, SettlementModifier, S
     public int getUsedLots() {
         return USED_LOTS;
     }
-    
-    
 }
