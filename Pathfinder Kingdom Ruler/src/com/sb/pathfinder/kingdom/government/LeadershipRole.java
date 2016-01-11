@@ -1,5 +1,6 @@
 package com.sb.pathfinder.kingdom.government;
 
+import com.sb.pathfinder.kingdom.EmptyKingdomModifier;
 import com.sb.pathfinder.kingdom.Kingdom;
 import com.sb.pathfinder.kingdom.KingdomModifier;
 import com.sb.rpg.RPGCharacter;
@@ -51,7 +52,8 @@ public class LeadershipRole {
     private KingdomModifier currentEffect;
 
     public LeadershipRole(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
-	this(title, character, available, kingdom, null, null);
+	this(title, character, available, kingdom, EmptyKingdomModifier.getInstance(),
+		EmptyKingdomModifier.getInstance());
     }
 
     public LeadershipRole(String title, RPGCharacter character, boolean available, Kingdom kingdom,
@@ -169,30 +171,26 @@ public class LeadershipRole {
     }
 
     /**
-     * Checks if there is a character present to apply this role's bonus.
+     * Checks if the role is vacant.
      * 
-     * @return <tt>true</tt> if the role is currently occupied and is available.
+     * @return <tt>true</tt> if the role is currently not occupied or is unavailable.
      */
-    public boolean isPresent() {
-	return isOccupied() && isAvailable();
+    public boolean isVacant() {
+	return !isOccupied() || !isAvailable();
     }
 
     /**
      * Updates the effects of this role that is applied on the kingdom.
      * Starts by removing the current effect(s), then checks which set of effects should be applied.
-     * 
-     * @throws NullPointerException
-     *             if the bonus or the penalty of the kingdom was not set before calling this
-     *             method.
      */
     public void apply() {
 	if (currentEffect != null)
 	    currentEffect.removeFrom(kingdom);
 
-	if (isPresent())
-	    currentEffect = bonus;
-	else
+	if (isVacant())
 	    currentEffect = penalty;
+	else
+	    currentEffect = bonus;
 
 	currentEffect.applyTo(kingdom);
     }
