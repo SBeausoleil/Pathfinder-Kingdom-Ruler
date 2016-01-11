@@ -1,6 +1,9 @@
-package com.sb.pathfinder.kingdom;
+package com.sb.pathfinder.kingdom.government;
 
-import com.sb.pathfinder.kingdom.government.LeadershipRole;
+import com.sb.pathfinder.kingdom.HolidayEdict;
+import com.sb.pathfinder.kingdom.Kingdom;
+import com.sb.pathfinder.kingdom.KingdomModifier;
+import com.sb.pathfinder.kingdom.SavedKingdomModifier;
 import com.sb.rpg.RPGCharacter;
 
 /**
