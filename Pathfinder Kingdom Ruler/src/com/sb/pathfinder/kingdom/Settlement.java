@@ -9,7 +9,7 @@ public class Settlement {
     private final Tile TILE;
     
     // TODO find some way to represent the location of buildings toward one another
-    private LinkedList<Building> buildings;
+    private LinkedList<AbstractBuilding> buildings;
     private int availableLots;
     private int nDistricts;
     
@@ -26,7 +26,7 @@ public class Settlement {
     public Settlement(String name, Tile tile) {
 	this.name = name;
 	TILE = tile;
-	buildings = new LinkedList<Building>();
+	buildings = new LinkedList<AbstractBuilding>();
     }
     
     /**

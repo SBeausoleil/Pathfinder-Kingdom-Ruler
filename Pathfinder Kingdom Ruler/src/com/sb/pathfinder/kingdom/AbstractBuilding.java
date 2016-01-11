@@ -2,13 +2,13 @@ package com.sb.pathfinder.kingdom;
 
 import java.io.Serializable;
 
-public abstract class Building implements KingdomModifier, SettlementModifier, Serializable {
+public abstract class AbstractBuilding implements KingdomModifier, SettlementModifier, Serializable {
     private static final long serialVersionUID = 7926242229024942097L;
     
     protected final String NAME;
     public final int USED_LOTS;
     
-    public Building(String name, int usedLots) {
+    public AbstractBuilding(String name, int usedLots) {
 	NAME = name;
 	USED_LOTS = usedLots;
     }
