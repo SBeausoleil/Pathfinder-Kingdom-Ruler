@@ -9,7 +9,14 @@ import com.sb.pathfinder.kingdom.government.General;
 import com.sb.pathfinder.kingdom.government.GrandDiplomat;
 import com.sb.pathfinder.kingdom.government.Heir;
 import com.sb.pathfinder.kingdom.government.HighPriest;
+import com.sb.pathfinder.kingdom.government.Magister;
+import com.sb.pathfinder.kingdom.government.Marshal;
+import com.sb.pathfinder.kingdom.government.RoyalEnforcer;
 import com.sb.pathfinder.kingdom.government.Ruler;
+import com.sb.pathfinder.kingdom.government.Spymaster;
+import com.sb.pathfinder.kingdom.government.Treasurer;
+import com.sb.pathfinder.kingdom.government.Viceroy;
+import com.sb.pathfinder.kingdom.government.Warden;
 
 public class Government implements KingdomModifier, Serializable {
     private static final long serialVersionUID = -5769498101269069307L;
