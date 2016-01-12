@@ -34,10 +34,6 @@ public abstract class RPGCharacter {
 	this.level = level;
     }
 
-    public abstract int getDefense();
-
-    public abstract int getInitiativeBonus();
-
     public abstract AbilityList getAbilities();
 
     public FeatsList getFeats() {

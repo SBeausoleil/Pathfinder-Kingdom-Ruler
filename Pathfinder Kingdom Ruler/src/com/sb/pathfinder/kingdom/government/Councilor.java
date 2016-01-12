@@ -15,7 +15,8 @@ public class Councilor extends LeadershipRole {
 
     public Councilor(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
-	// TODO Auto-generated constructor stub
+	setBonus(new CouncilorBonus());
+	setPenalty(new CouncilorPenalty());
     }
 
     public class CouncilorBonus extends SavedKingdomModifier {
@@ -41,7 +42,7 @@ public class Councilor extends LeadershipRole {
 
 	public static final int LOYALTY_PENALTY = -2;
 
-	private HolidayEdict edict = null;
+	private HolidayEdict savedEdict = null;
 
 	/**
 	 * Increases unrest by 1 every turns, decreases loyalty by 2 and sets the holiday edict to
@@ -50,8 +51,8 @@ public class Councilor extends LeadershipRole {
 	@Override
 	public void applyTo(Kingdom kingdom) {
 	    kingdom.modUnrest(UNREST_PENALTY);
-	    if (edict == null) {
-		edict = kingdom.getHolidayEdict();
+	    if (savedEdict == null) {
+		savedEdict = kingdom.getHolidayEdict();
 		kingdom.setHolidayEdict(HolidayEdict.NO_HOLIDAYS);
 		kingdom.modLoyalty(LOYALTY_PENALTY);
 	    }
@@ -64,8 +65,8 @@ public class Councilor extends LeadershipRole {
 	 */
 	@Override
 	public void removeFrom(Kingdom kingdom) {
-	    kingdom.setHolidayEdict(edict);
-	    edict = null;
+	    kingdom.setHolidayEdict(savedEdict);
+	    savedEdict = null;
 	    kingdom.modLoyalty(-LOYALTY_PENALTY);
 	}
 

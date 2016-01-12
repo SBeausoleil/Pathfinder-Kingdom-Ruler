@@ -5,6 +5,12 @@ import com.sb.pathfinder.kingdom.Kingdom;
 import com.sb.pathfinder.kingdom.SavedKingdomModifier;
 import com.sb.rpg.RPGCharacter;
 
+/**
+ * Is a consort to the Ruler of the kingdom.
+ * 
+ * @author Samuel Beausoleil
+ *
+ */
 public class Consort extends LeadershipRole {
 
     public Consort(String title, RPGCharacter character, boolean available, Kingdom kingdom) {

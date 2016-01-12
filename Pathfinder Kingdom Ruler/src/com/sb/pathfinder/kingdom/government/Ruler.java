@@ -38,9 +38,9 @@ public class Ruler extends LeadershipRole {
 	 * @return <tt>true</tt> if the attributes list has been modified.
 	 */
 	public boolean addKingdomAttribute(Kingdom.Attribute attribute) {
-	    if (       attribute == Kingdom.Attribute.Economy
-		    || attribute == Kingdom.Attribute.Loyalty
-		    || attribute == Kingdom.Attribute.Stability) {
+	    if (       attribute == Kingdom.Attribute.ECONOMY
+		    || attribute == Kingdom.Attribute.LOYALTY
+		    || attribute == Kingdom.Attribute.STABILITY) {
 		return modifiedAttributes.add(attribute);
 	    }
 	    return false;
@@ -70,13 +70,13 @@ public class Ruler extends LeadershipRole {
 	private void modify(Kingdom kingdom, int mod) {
 	    for (Kingdom.Attribute attr : modifiedAttributes) {
 		switch (attr) {
-		case Economy:
+		case ECONOMY:
 		    kingdom.modEconomy(mod);
 		    break;
-		case Loyalty:
+		case LOYALTY:
 		    kingdom.modEconomy(mod);
 		    break;
-		case Stability:
+		case STABILITY:
 		    kingdom.modStability(mod);
 		    break;
 		}

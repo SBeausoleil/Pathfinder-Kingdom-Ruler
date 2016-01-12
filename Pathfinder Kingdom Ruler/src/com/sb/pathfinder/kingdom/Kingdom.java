@@ -4,17 +4,24 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.LinkedList;
 
+/**
+ * A Kingdom as represented in Pathfinder.
+ * 
+ * @author Samuel Beausoleil
+ *
+ */
 public class Kingdom implements Serializable {
 
     private static final long serialVersionUID = -5977335406962574382L;
 
-    public static enum Attribute { Economy, Loyalty, Stability; }
+    public static enum Attribute { ECONOMY, LOYALTY, STABILITY; }
     
     private String name;
     private MoralAlignment moralAlignment;
     private LawAlignment lawAlignment;
     private long population;
     private LinkedList<Tile> tiles;
+    private int constructionPoints;
 
     private int unrest;
 
@@ -398,5 +405,29 @@ public class Kingdom implements Serializable {
      */
     public int getSize() {
 	return tiles.size();
+    }
+
+    /**
+     * Returns the constructionPoints.
+     * @return the constructionPoints
+     */
+    public int getConstructionPoints() {
+	return constructionPoints;
+    }
+
+    /**
+     * Sets the value of constructionPoints to that of the parameter.
+     * @param constructionPoints the constructionPoints to set
+     */
+    public void setConstructionPoints(int constructionPoints) {
+	this.constructionPoints = constructionPoints;
+    }
+    
+    /**
+     * Adds the mod to the construction points.
+     * @param mod to add to the construction points.
+     */
+    public void modConstructionPoints(int mod) {
+	this.constructionPoints += mod;
     }
 }
