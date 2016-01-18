@@ -11,7 +11,6 @@ import com.sb.pathfinder.kingdom.government.General;
 import com.sb.pathfinder.kingdom.government.GrandDiplomat;
 import com.sb.pathfinder.kingdom.government.Heir;
 import com.sb.pathfinder.kingdom.government.HighPriest;
-import com.sb.pathfinder.kingdom.government.LeaderAction;
 import com.sb.pathfinder.kingdom.government.LeadershipRole;
 import com.sb.pathfinder.kingdom.government.Magister;
 import com.sb.pathfinder.kingdom.government.Marshal;
