@@ -194,4 +194,38 @@ public class LeadershipRole {
 
 	currentEffect.applyTo(kingdom);
     }
+    
+    /**
+     * Removes the current effects of this leadership role from it's kingdom.
+     */
+    public void remove() {
+	currentEffect.removeFrom(kingdom);
+	currentEffect = null;
+    }
+
+    /**
+     * Returns the kingdom.
+     * @return the kingdom
+     */
+    public Kingdom getKingdom() {
+        return kingdom;
+    }
+
+    /**
+     * Sets the value of kingdom to that of the parameter.
+     * @param kingdom the kingdom to set
+     */
+    public void setKingdom(Kingdom kingdom) {
+	currentEffect.removeFrom(this.kingdom);
+        this.kingdom = kingdom;
+        currentEffect.applyTo(kingdom);
+    }
+
+    /**
+     * Returns the currentEffect.
+     * @return the currentEffect
+     */
+    public KingdomModifier getCurrentEffect() {
+        return currentEffect;
+    }
 }

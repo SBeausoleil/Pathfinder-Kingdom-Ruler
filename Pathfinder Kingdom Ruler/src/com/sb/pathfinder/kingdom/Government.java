@@ -1,7 +1,9 @@
 package com.sb.pathfinder.kingdom;
 
 import java.io.Serializable;
-import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.function.Consumer;
 
 import com.sb.pathfinder.kingdom.government.Consort;
 import com.sb.pathfinder.kingdom.government.Councilor;
@@ -9,6 +11,8 @@ import com.sb.pathfinder.kingdom.government.General;
 import com.sb.pathfinder.kingdom.government.GrandDiplomat;
 import com.sb.pathfinder.kingdom.government.Heir;
 import com.sb.pathfinder.kingdom.government.HighPriest;
+import com.sb.pathfinder.kingdom.government.LeaderAction;
+import com.sb.pathfinder.kingdom.government.LeadershipRole;
 import com.sb.pathfinder.kingdom.government.Magister;
 import com.sb.pathfinder.kingdom.government.Marshal;
 import com.sb.pathfinder.kingdom.government.RoyalEnforcer;
@@ -18,11 +22,13 @@ import com.sb.pathfinder.kingdom.government.Treasurer;
 import com.sb.pathfinder.kingdom.government.Viceroy;
 import com.sb.pathfinder.kingdom.government.Warden;
 
-public class Government implements KingdomModifier, Serializable {
+public class Government implements Serializable {
     private static final long serialVersionUID = -5769498101269069307L;
     
-    private LinkedList<Ruler> ruler; // There may be two rulers if they are married and of equal rank.
-    private Consort consort;
+    private Kingdom kingdom;
+    
+    private LinkedHashSet<Ruler> rulers; // There may be two rulers if they are married and of equal rank.
+    private LinkedHashSet<Consort> consorts;
     private Councilor councilor;
     private General general;
     private GrandDiplomat grandDiplomat;
@@ -33,20 +39,34 @@ public class Government implements KingdomModifier, Serializable {
     private RoyalEnforcer royalEnforcer;
     private Spymaster spymaster;
     private Treasurer treasurer;
-    private LinkedList<Viceroy> viceroys;
+    private LinkedHashSet<Viceroy> viceroys;
     private Warden warden;
     
-    public Government() {
-	ruler = new LinkedList<Ruler>();
-	viceroys = new LinkedList<Viceroy>();
+    public Government(Kingdom kingdom) {
+	this.kingdom = kingdom;
+	rulers = new LinkedHashSet<Ruler>();
+	consorts = new LinkedHashSet<Consort>();
+	councilor = new Councilor("Councilor", null, false, kingdom);
+	general = new General("General", null, false, kingdom);
+	grandDiplomat = new GrandDiplomat("Grand Diplomat", null, false, kingdom);
+	heir = new Heir("Heir", null, false, kingdom);
+	highPriest = new HighPriest("High Priest", null, false, kingdom);
+	magister = new Magister("Magister", null, false, kingdom);
+	marshal = new Marshal("Marshal", null, false, kingdom);
+	royalEnforcer = new RoyalEnforcer("Royal Enforcer", null, false, kingdom);
+	spymaster = new Spymaster("Spymaster", null, false, kingdom);
+	treasurer = new Treasurer("Treasurer", null, false, kingdom);
+	viceroys = new LinkedHashSet<Viceroy>();
+	warden = new Warden("Warden", null, false, kingdom);
     }
     
-    public Government(LinkedList<Ruler> ruler, Consort consort, Councilor councilor, General general,
+    public Government(Kingdom kingdom, LinkedHashSet<Ruler> ruler, LinkedHashSet<Consort> consorts, Councilor councilor, General general,
 	    GrandDiplomat grandDiplomat, Heir heir, HighPriest highPriest, Magister magister, Marshal marshal,
-	    RoyalEnforcer royalEnforcer, Spymaster spymaster, Treasurer treasurer, LinkedList<Viceroy> viceroys,
+	    RoyalEnforcer royalEnforcer, Spymaster spymaster, Treasurer treasurer, LinkedHashSet<Viceroy> viceroys,
 	    Warden warden) {
-	this.ruler = ruler;
-	this.consort = consort;
+	this.kingdom = kingdom;
+	this.rulers = ruler;
+	this.consorts = consorts;
 	this.councilor = councilor;
 	this.general = general;
 	this.grandDiplomat = grandDiplomat;
@@ -61,48 +81,52 @@ public class Government implements KingdomModifier, Serializable {
 	this.warden = warden;
     }
 
-    @Override
-    public void applyTo(Kingdom kingdom) {
-	// TODO Auto-generated method stub
-	
-    }
-
-    @Override
-    public void removeFrom(Kingdom kingdom) {
-	// TODO Auto-generated method stub
-	
-    }
-
     /**
-     * Returns the ruler.
-     * @return the ruler
+     * Returns the list of rulers.
+     * @return the list of rulers.
      */
-    public LinkedList<Ruler> getRuler() {
-        return ruler;
+    public Iterator<Ruler> getRulers() {
+        return rulers.iterator();
     }
 
-    /**
-     * Sets the value of ruler to that of the parameter.
-     * @param ruler the ruler to set
-     */
-    public void setRuler(LinkedList<Ruler> ruler) {
-        this.ruler = ruler;
+    public boolean addRuler(Ruler ruler) {
+	if (ruler != null && rulers.add(ruler)) {
+	    ruler.apply();
+	    return true;
+	}
+	return false;
     }
-
+    
+    public boolean removeRuler(Ruler ruler) {
+	if (ruler != null && rulers.remove(ruler)) {
+	    ruler.remove();
+	    return true;
+	}
+	return false;
+    }
+    
     /**
      * Returns the consort.
      * @return the consort
      */
-    public Consort getConsort() {
-        return consort;
+    public Iterator<Consort> getConsorts() {
+        return consorts.iterator();
     }
-
-    /**
-     * Sets the value of consort to that of the parameter.
-     * @param consort the consort to set
-     */
-    public void setConsort(Consort consort) {
-        this.consort = consort;
+    
+    public boolean addConsort(Consort consort) {
+	if (consort != null && consorts.add(consort)) {
+	    consort.apply();
+	    return true;
+	}
+	return false;
+    }
+    
+    public boolean removeConsort(Consort consort) {
+	if (consort != null && consorts.remove(consort)) {
+	    consort.remove();
+	    return true;
+	}
+	return false;
     }
 
     /**
@@ -118,7 +142,11 @@ public class Government implements KingdomModifier, Serializable {
      * @param councilor the councilor to set
      */
     public void setCouncilor(Councilor councilor) {
+	if (this.councilor != null)
+	    this.councilor.remove();
         this.councilor = councilor;
+        if (councilor != null)
+            councilor.apply();
     }
 
     /**
@@ -134,7 +162,11 @@ public class Government implements KingdomModifier, Serializable {
      * @param general the general to set
      */
     public void setGeneral(General general) {
+	if (this.general != null)
+	    this.general.remove();
         this.general = general;
+        if (general != null)
+            general.apply();
     }
 
     /**
@@ -150,7 +182,11 @@ public class Government implements KingdomModifier, Serializable {
      * @param grandDiplomat the grandDiplomat to set
      */
     public void setGrandDiplomat(GrandDiplomat grandDiplomat) {
+	if (this.grandDiplomat != null)
+	    this.grandDiplomat.remove();
         this.grandDiplomat = grandDiplomat;
+        if (grandDiplomat != null)
+            grandDiplomat.apply();
     }
 
     /**
@@ -166,7 +202,11 @@ public class Government implements KingdomModifier, Serializable {
      * @param heir the heir to set
      */
     public void setHeir(Heir heir) {
+	if (this.heir != null)
+	    this.heir.remove();
         this.heir = heir;
+        if (heir != null)
+            heir.apply();
     }
 
     /**
@@ -182,7 +222,11 @@ public class Government implements KingdomModifier, Serializable {
      * @param highPriest the highPriest to set
      */
     public void setHighPriest(HighPriest highPriest) {
+	if (this.highPriest != null)
+	    this.highPriest.remove();
         this.highPriest = highPriest;
+        if (highPriest != null)
+            highPriest.apply();
     }
 
     /**
@@ -198,7 +242,11 @@ public class Government implements KingdomModifier, Serializable {
      * @param magister the magister to set
      */
     public void setMagister(Magister magister) {
+	if (this.magister != null)
+	    this.magister.remove();
         this.magister = magister;
+        if (magister != null)
+            magister.apply();
     }
 
     /**
@@ -214,7 +262,11 @@ public class Government implements KingdomModifier, Serializable {
      * @param marshal the marshal to set
      */
     public void setMarshal(Marshal marshal) {
+	if (this.marshal != null)
+	    this.marshal.remove();
         this.marshal = marshal;
+        if (marshal != null)
+            marshal.apply();
     }
 
     /**
@@ -230,7 +282,11 @@ public class Government implements KingdomModifier, Serializable {
      * @param royalEnforcer the royalEnforcer to set
      */
     public void setRoyalEnforcer(RoyalEnforcer royalEnforcer) {
+	if (this.royalEnforcer != null)
+	    this.royalEnforcer.remove();
         this.royalEnforcer = royalEnforcer;
+        if (royalEnforcer != null)
+            royalEnforcer.apply();
     }
 
     /**
@@ -246,7 +302,11 @@ public class Government implements KingdomModifier, Serializable {
      * @param spymaster the spymaster to set
      */
     public void setSpymaster(Spymaster spymaster) {
+	if (this.spymaster != null)
+	    this.spymaster.remove();
         this.spymaster = spymaster;
+        if (spymaster != null)
+            spymaster.remove();
     }
 
     /**
@@ -262,23 +322,36 @@ public class Government implements KingdomModifier, Serializable {
      * @param treasurer the treasurer to set
      */
     public void setTreasurer(Treasurer treasurer) {
+	if (this.treasurer != null)
+	    this.treasurer.remove();
         this.treasurer = treasurer;
+        if (treasurer != null)
+            treasurer.apply();
     }
 
     /**
      * Returns the viceroys.
      * @return the viceroys
      */
-    public LinkedList<Viceroy> getViceroys() {
-        return viceroys;
+    public Iterator<Viceroy> getViceroys() {
+        return viceroys.iterator();
     }
 
-    /**
-     * Sets the value of viceroys to that of the parameter.
-     * @param viceroys the viceroys to set
-     */
-    public void setViceroys(LinkedList<Viceroy> viceroys) {
-        this.viceroys = viceroys;
+    public boolean addViceroy(Viceroy viceroy) {
+	if (viceroy != null && viceroys.add(viceroy)) {
+	    viceroy.apply();
+	    return true;
+	}
+	return false;
+	    
+    }
+    
+    public boolean removeViceroy(Viceroy viceroy) {
+	if (viceroy != null && viceroys.remove(viceroy)) {
+	    viceroy.remove();
+	    return true;
+	}
+	return false;
     }
     
     /**
@@ -294,7 +367,51 @@ public class Government implements KingdomModifier, Serializable {
      * @param warden the warden to set
      */
     public void setWarden(Warden warden) {
+	if (this.warden != null)
+	    this.warden.remove();
         this.warden = warden;
+        if (warden != null)
+            warden.apply();
     }
 
+    /**
+     * Returns the kingdom.
+     * @return the kingdom
+     */
+    public Kingdom getKingdom() {
+        return kingdom;
+    }
+
+    /**
+     * Sets the value of kingdom to that of the parameter.
+     * Changes the kingdom of every leadership roles in the government.
+     * @param kingdom the kingdom to set
+     */
+    public void setKingdom(Kingdom kingdom) {
+        this.kingdom = kingdom;
+        
+        // Update the loyalties of the leaders
+        leadersDo((role) -> role.setKingdom(kingdom));
+    }
+
+    public void leadersDo(Consumer<LeadershipRole> action) {
+	for (LeadershipRole ruler : rulers)
+	    action.accept(ruler);
+	for (LeadershipRole consort : consorts)
+	    action.accept(consort);
+	action.accept(councilor);
+	action.accept(general);
+	action.accept(general);
+	action.accept(grandDiplomat);
+	action.accept(heir);
+	action.accept(highPriest);
+	action.accept(magister);
+	action.accept(marshal);
+	action.accept(royalEnforcer);
+	action.accept(spymaster);
+	action.accept(treasurer);
+	for (LeadershipRole viceroy : viceroys)
+	    action.accept(viceroy);
+	action.accept(warden);
+    }
 }

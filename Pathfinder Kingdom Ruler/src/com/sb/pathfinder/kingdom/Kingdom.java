@@ -2,7 +2,9 @@ package com.sb.pathfinder.kingdom;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * A Kingdom as represented in Pathfinder.
@@ -21,6 +23,7 @@ public class Kingdom implements Serializable {
     private LawAlignment lawAlignment;
     private long population;
     private LinkedList<Tile> tiles;
+    private Map<String, Settlement> settlements;
     private int constructionPoints;
 
     private int unrest;
@@ -55,6 +58,7 @@ public class Kingdom implements Serializable {
 	this.promotionEdict = promotionEdict;
 	this.taxationEdict = taxationEdict;
 	tiles = new LinkedList<Tile>();
+	settlements = new HashMap<String, Settlement>();
     }
 
 
@@ -430,4 +434,20 @@ public class Kingdom implements Serializable {
     public void modConstructionPoints(int mod) {
 	this.constructionPoints += mod;
     }
+
+    /**
+     * Returns the settlements.
+     * @return the settlements
+     */
+    public Map<String, Settlement> getSettlements() {
+	return settlements;
+    }
+
+    /**
+     * Sets the value of settlements to that of the parameter.
+     * @param settlements the settlements to set
+     */
+    public void setSettlements(Map<String, Settlement> settlements) {
+	this.settlements = settlements;
+    }    
 }
