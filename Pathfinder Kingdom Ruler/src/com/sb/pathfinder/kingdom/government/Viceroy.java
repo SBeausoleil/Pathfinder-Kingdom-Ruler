@@ -1,7 +1,6 @@
 package com.sb.pathfinder.kingdom.government;
 
 import com.sb.pathfinder.kingdom.Kingdom;
-import com.sb.pathfinder.kingdom.KingdomModifier;
 import com.sb.pathfinder.kingdom.SavedKingdomModifier;
 import com.sb.rpg.RPGCharacter;
 

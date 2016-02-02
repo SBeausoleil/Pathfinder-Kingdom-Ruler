@@ -7,16 +7,9 @@ public class KingdomStateDisplay implements MenuElement {
     
     private static final long serialVersionUID = -9209212603894469432L;
     
-    private String name;
-    
     private Kingdom kingdom;
     
-    public KingdomStateDisplay(String name) {
-	this.setName(name);
-    }
-    
-    public KingdomStateDisplay(String name, Kingdom kingdom) {
-	this.name = name;
+    public KingdomStateDisplay(Kingdom kingdom) {
 	this.kingdom = kingdom;
     }
     
@@ -26,10 +19,16 @@ public class KingdomStateDisplay implements MenuElement {
     }
 
     public static void display(Kingdom kingdom) {
+	if (kingdom == null) {
+	    System.out.println("Error: No kingdom is set to be seen.");
+	    return;
+	}
+	
 	System.out.println("===================================================");
 	System.out.println("Name: " + kingdom.getName());
 	System.out.println("Alignment: " + kingdom.getLawAlignment().name() + " " + kingdom.getMoralAlignment().name());
 	System.out.println("Population: " + kingdom.getPopulation());
+	System.out.println("Number of settlements: " + kingdom.getNumberOfSettlements());
 	System.out.println("Number of hexes: " + kingdom.getSize());
 	System.out.println("Unrest: " + kingdom.getUnrest());
 	System.out.println("===================================================");
@@ -42,19 +41,6 @@ public class KingdomStateDisplay implements MenuElement {
 	System.out.println("===================================================");
 	System.out.println("Glory:  " + kingdom.getGlory());
 	System.out.println("Infamy: " + kingdom.getInfamy());
-    }
-
-    @Override
-    public String getName() {
-	return name;
-    }
-
-    /**
-     * Sets the value of name to that of the parameter.
-     * @param name the name to set
-     */
-    public void setName(String name) {
-	this.name = name;
     }
 
     /**

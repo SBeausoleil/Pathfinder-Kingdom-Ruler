@@ -23,7 +23,7 @@ public class MenuUtil {
 		    return value;
 	    }
 	    System.out.println(errorMessage);
-	}  
+	}
     }
     
     public static boolean isInteger(String str) {

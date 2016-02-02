@@ -8,6 +8,7 @@ import com.sb.rpg.RPGCharacter;
 /**
  * Represents a leadership role in the government of a kingdom.
  * Can be used as-is to create quick instances of leadership role.
+ * All call to setters in this class will result in updates of the state of the affected kingdom.
  * 
  * @author Samuel Beausoleil
  */
@@ -100,8 +101,10 @@ public class LeadershipRole {
      * @param character
      *            the character to set
      */
-    public void setCharacter(RPGCharacter character) {
+    public final void setCharacter(RPGCharacter character) {
+	remove();
 	this.character = character;
+	apply();
     }
 
     /**
@@ -119,8 +122,10 @@ public class LeadershipRole {
      * @param bonus
      *            the bonus to set
      */
-    public void setBonus(KingdomModifier bonus) {
+    public final void setBonus(KingdomModifier bonus) {
+	remove();
 	this.bonus = bonus;
+	apply();
     }
 
     /**
@@ -138,8 +143,10 @@ public class LeadershipRole {
      * @param penalty
      *            the penalty to set
      */
-    public void setPenalty(KingdomModifier penalty) {
+    public final void setPenalty(KingdomModifier penalty) {
+	remove();
 	this.penalty = penalty;
+	apply();
     }
 
     /**
@@ -157,8 +164,10 @@ public class LeadershipRole {
      * @param available
      *            the available to set
      */
-    public void setAvailable(boolean available) {
+    public final void setAvailable(boolean available) {
+	remove();
 	this.available = available;
+	apply();
     }
 
     /**
@@ -194,7 +203,7 @@ public class LeadershipRole {
 
 	currentEffect.applyTo(kingdom);
     }
-    
+
     /**
      * Removes the current effects of this leadership role from it's kingdom.
      */
@@ -205,27 +214,31 @@ public class LeadershipRole {
 
     /**
      * Returns the kingdom.
+     * 
      * @return the kingdom
      */
     public Kingdom getKingdom() {
-        return kingdom;
+	return kingdom;
     }
 
     /**
      * Sets the value of kingdom to that of the parameter.
-     * @param kingdom the kingdom to set
+     * 
+     * @param kingdom
+     *            the kingdom to set
      */
-    public void setKingdom(Kingdom kingdom) {
-	currentEffect.removeFrom(this.kingdom);
-        this.kingdom = kingdom;
-        currentEffect.applyTo(kingdom);
+    public final void setKingdom(Kingdom kingdom) {
+	remove();
+	this.kingdom = kingdom;
+	apply();
     }
 
     /**
      * Returns the currentEffect.
+     * 
      * @return the currentEffect
      */
     public KingdomModifier getCurrentEffect() {
-        return currentEffect;
+	return currentEffect;
     }
 }

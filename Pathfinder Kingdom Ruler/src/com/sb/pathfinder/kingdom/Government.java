@@ -1,7 +1,6 @@
 package com.sb.pathfinder.kingdom;
 
 import java.io.Serializable;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
@@ -27,7 +26,7 @@ public class Government implements Serializable {
     private Kingdom kingdom;
     
     private LinkedHashSet<Ruler> rulers; // There may be two rulers if they are married and of equal rank.
-    private LinkedHashSet<Consort> consorts;
+    private LinkedHashSet<Consort> consorts; // There may be multiple official consorts.
     private Councilor councilor;
     private General general;
     private GrandDiplomat grandDiplomat;
@@ -38,7 +37,7 @@ public class Government implements Serializable {
     private RoyalEnforcer royalEnforcer;
     private Spymaster spymaster;
     private Treasurer treasurer;
-    private LinkedHashSet<Viceroy> viceroys;
+    private LinkedHashSet<Viceroy> viceroys; // One viceroy per colony.
     private Warden warden;
     
     public Government(Kingdom kingdom) {
@@ -84,8 +83,8 @@ public class Government implements Serializable {
      * Returns the list of rulers.
      * @return the list of rulers.
      */
-    public Iterator<Ruler> getRulers() {
-        return rulers.iterator();
+    public Iterable<Ruler> getRulers() {
+        return rulers;
     }
 
     public boolean addRuler(Ruler ruler) {
@@ -108,8 +107,8 @@ public class Government implements Serializable {
      * Returns the consort.
      * @return the consort
      */
-    public Iterator<Consort> getConsorts() {
-        return consorts.iterator();
+    public Iterable<Consort> getConsorts() {
+        return consorts;
     }
     
     public boolean addConsort(Consort consort) {
@@ -332,8 +331,8 @@ public class Government implements Serializable {
      * Returns the viceroys.
      * @return the viceroys
      */
-    public Iterator<Viceroy> getViceroys() {
-        return viceroys.iterator();
+    public Iterable<Viceroy> getViceroys() {
+        return viceroys;
     }
 
     public boolean addViceroy(Viceroy viceroy) {
@@ -392,7 +391,7 @@ public class Government implements Serializable {
         // Update the loyalties of the leaders
         leadersDo((role) -> role.setKingdom(kingdom));
     }
-
+    
     public void leadersDo(Consumer<LeadershipRole> action) {
 	for (LeadershipRole ruler : rulers)
 	    action.accept(ruler);

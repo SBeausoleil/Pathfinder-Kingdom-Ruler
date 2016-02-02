@@ -19,6 +19,14 @@ public class Consort extends LeadershipRole {
 	setPenalty(EmptyKingdomModifier.getInstance());
     }
     
+    /**
+     * A consort applies the following bonus to a kingdom:
+     * <p>
+     * - Half of the charisma modifier to the loyalty
+     * 
+     * @author Samuel Beausoleil
+     *
+     */
     public class ConsortBonus extends SavedKingdomModifier {
 
 	@Override
