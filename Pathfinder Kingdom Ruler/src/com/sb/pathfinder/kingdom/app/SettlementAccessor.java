@@ -1,61 +1,55 @@
 package com.sb.pathfinder.kingdom.app;
 
-import com.sb.menu.MenuUtil;
 import com.sb.menu.OptionsMenu;
+import com.sb.menu.Selector;
 import com.sb.pathfinder.kingdom.Kingdom;
 import com.sb.pathfinder.kingdom.Settlement;
-import com.sb.util.IntBracket;
 
-public class SettlementAccessor extends OptionsMenu {
+public class SettlementAccessor extends OptionsMenu implements KingdomDependant {
 
     private static final long serialVersionUID = 2262689565707952941L;
 
-    private Kingdom kingdom;
+    private Kingdom currentKingdom;
 
     public SettlementAccessor(Kingdom kingdom) {
-	this.kingdom = kingdom;
+	this.currentKingdom = kingdom;
     }
-    
+
     @Override
     public void open() {
-	// List settlements
-	int i = 1;
-	for (Settlement settlement : kingdom.getSettlements())
-	    System.out.println(i++ + ") " + settlement.getName());
+	if (currentKingdom == null) {
+	    System.out.println("You need to select a kingdom before accessing a settlement.");
+	    return;
+	}
 	
-	// Ask the index of the desired settlement
-	int index = MenuUtil.requestInt("Enter the number of the desired settlement: ", new IntBracket(1, i),
-		"Error: the value entered is not valid");
-	
-	// Get the matching settlement
-	i = 1;
-	Settlement desiredSettlement = null;
-	for (Settlement settlement : kingdom.getSettlements())
-	    if (i++ == index) {
-		desiredSettlement = settlement;
-		break;
-	    }
-	
-	// Make a SettlementMenu for this settlement
-	SettlementMenu menu = new SettlementMenu(desiredSettlement);
-	
-	// Open that SettlementMenu
-	menu.open();
+	Selector<Settlement> settlements = new Selector<>();
+	settlements.register(currentKingdom.getSettlements(), Settlement::getName);
+
+	Settlement desiredSettlement = settlements.select();
+	if (desiredSettlement != Selector.SELECTION_CANCELLED) {
+	    SettlementMenu menu = new SettlementMenu(desiredSettlement);
+	    menu.open();
+	}
     }
-    
+
     /**
      * Returns the kingdom.
+     * 
      * @return the kingdom
      */
-    public Kingdom getKingdom() {
-        return kingdom;
+    @Override
+    public Kingdom getCurrentKingdom() {
+	return currentKingdom;
     }
 
     /**
      * Sets the value of kingdom to that of the parameter.
-     * @param kingdom the kingdom to set
+     * 
+     * @param kingdom
+     *            the kingdom to set
      */
-    public void setKingdom(Kingdom kingdom) {
-        this.kingdom = kingdom;
+    @Override
+    public void setCurrentKingdom(Kingdom kingdom) {
+	this.currentKingdom = kingdom;
     }
 }

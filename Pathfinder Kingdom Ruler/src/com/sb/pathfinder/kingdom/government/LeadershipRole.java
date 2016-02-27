@@ -208,7 +208,8 @@ public class LeadershipRole {
      * Removes the current effects of this leadership role from it's kingdom.
      */
     public void remove() {
-	currentEffect.removeFrom(kingdom);
+	if (kingdom != null && currentEffect != null)
+	    currentEffect.removeFrom(kingdom);
 	currentEffect = null;
     }
 

@@ -22,43 +22,47 @@ import com.sb.pathfinder.kingdom.government.Warden;
 
 public class Government implements Serializable {
     private static final long serialVersionUID = -5769498101269069307L;
-    
+
     private Kingdom kingdom;
-    
-    private LinkedHashSet<Ruler> rulers; // There may be two rulers if they are married and of equal rank.
-    private LinkedHashSet<Consort> consorts; // There may be multiple official consorts.
-    private Councilor councilor;
-    private General general;
-    private GrandDiplomat grandDiplomat;
-    private Heir heir;
-    private HighPriest highPriest;
-    private Magister magister;
-    private Marshal marshal;
-    private RoyalEnforcer royalEnforcer;
-    private Spymaster spymaster;
-    private Treasurer treasurer;
-    private LinkedHashSet<Viceroy> viceroys; // One viceroy per colony.
-    private Warden warden;
-    
+
+    private LinkedHashSet<Ruler>   rulers;	 // There may be two rulers if they are married and of equal rank.
+    private LinkedHashSet<Consort> consorts;	 // There may be multiple official consorts.
+    private Councilor		   councilor;
+    private General		   general;
+    private GrandDiplomat	   grandDiplomat;
+    private Heir		   heir;
+    private HighPriest		   highPriest;
+    private Magister		   magister;
+    private Marshal		   marshal;
+    private RoyalEnforcer	   royalEnforcer;
+    private Spymaster		   spymaster;
+    private Treasurer		   treasurer;
+    private LinkedHashSet<Viceroy> viceroys;	 // One viceroy per colony.
+    private Warden		   warden;
+
     public Government(Kingdom kingdom) {
 	this.kingdom = kingdom;
-	rulers = new LinkedHashSet<Ruler>();
-	consorts = new LinkedHashSet<Consort>();
-	councilor = new Councilor("Councilor", null, false, kingdom);
-	general = new General("General", null, false, kingdom);
-	grandDiplomat = new GrandDiplomat("Grand Diplomat", null, false, kingdom);
-	heir = new Heir("Heir", null, false, kingdom);
-	highPriest = new HighPriest("High Priest", null, false, kingdom);
-	magister = new Magister("Magister", null, false, kingdom);
-	marshal = new Marshal("Marshal", null, false, kingdom);
-	royalEnforcer = new RoyalEnforcer("Royal Enforcer", null, false, kingdom);
-	spymaster = new Spymaster("Spymaster", null, false, kingdom);
-	treasurer = new Treasurer("Treasurer", null, false, kingdom);
-	viceroys = new LinkedHashSet<Viceroy>();
-	warden = new Warden("Warden", null, false, kingdom);
+
+	//@formatter:off
+	rulers		= new LinkedHashSet<Ruler>();
+	consorts 	= new LinkedHashSet<Consort>();
+	councilor 	= new Councilor("Councilor", null, false, kingdom);
+	general 	= new General("General", null, false, kingdom);
+	grandDiplomat	= new GrandDiplomat("Grand Diplomat", null, false, kingdom);
+	heir 		= new Heir("Heir", null, false, kingdom);
+	highPriest 	= new HighPriest("High Priest", null, false, kingdom);
+	magister 	= new Magister("Magister", null, false, kingdom);
+	marshal 	= new Marshal("Marshal", null, false, kingdom);
+	royalEnforcer 	= new RoyalEnforcer("Royal Enforcer", null, false, kingdom);
+	spymaster 	= new Spymaster("Spymaster", null, false, kingdom);
+	treasurer 	= new Treasurer("Treasurer", null, false, kingdom);
+	viceroys 	= new LinkedHashSet<Viceroy>();
+	warden 		= new Warden("Warden", null, false, kingdom);
+	//@formatter:on
     }
-    
-    public Government(Kingdom kingdom, LinkedHashSet<Ruler> ruler, LinkedHashSet<Consort> consorts, Councilor councilor, General general,
+
+    public Government(Kingdom kingdom, LinkedHashSet<Ruler> ruler, LinkedHashSet<Consort> consorts, Councilor councilor,
+	    General general,
 	    GrandDiplomat grandDiplomat, Heir heir, HighPriest highPriest, Magister magister, Marshal marshal,
 	    RoyalEnforcer royalEnforcer, Spymaster spymaster, Treasurer treasurer, LinkedHashSet<Viceroy> viceroys,
 	    Warden warden) {
@@ -81,10 +85,11 @@ public class Government implements Serializable {
 
     /**
      * Returns the list of rulers.
+     * 
      * @return the list of rulers.
      */
     public Iterable<Ruler> getRulers() {
-        return rulers;
+	return rulers;
     }
 
     public boolean addRuler(Ruler ruler) {
@@ -94,7 +99,7 @@ public class Government implements Serializable {
 	}
 	return false;
     }
-    
+
     public boolean removeRuler(Ruler ruler) {
 	if (ruler != null && rulers.remove(ruler)) {
 	    ruler.remove();
@@ -102,15 +107,16 @@ public class Government implements Serializable {
 	}
 	return false;
     }
-    
+
     /**
      * Returns the consort.
+     * 
      * @return the consort
      */
     public Iterable<Consort> getConsorts() {
-        return consorts;
+	return consorts;
     }
-    
+
     public boolean addConsort(Consort consort) {
 	if (consort != null && consorts.add(consort)) {
 	    consort.apply();
@@ -118,7 +124,7 @@ public class Government implements Serializable {
 	}
 	return false;
     }
-    
+
     public boolean removeConsort(Consort consort) {
 	if (consort != null && consorts.remove(consort)) {
 	    consort.remove();
@@ -129,210 +135,241 @@ public class Government implements Serializable {
 
     /**
      * Returns the councilor.
+     * 
      * @return the councilor
      */
     public Councilor getCouncilor() {
-        return councilor;
+	return councilor;
     }
 
     /**
      * Sets the value of councilor to that of the parameter.
-     * @param councilor the councilor to set
+     * 
+     * @param councilor
+     *            the councilor to set
      */
     public void setCouncilor(Councilor councilor) {
 	if (this.councilor != null)
 	    this.councilor.remove();
-        this.councilor = councilor;
-        if (councilor != null)
-            councilor.apply();
+	this.councilor = councilor;
+	if (councilor != null)
+	    councilor.apply();
     }
 
     /**
      * Returns the general.
+     * 
      * @return the general
      */
     public General getGeneral() {
-        return general;
+	return general;
     }
 
     /**
      * Sets the value of general to that of the parameter.
-     * @param general the general to set
+     * 
+     * @param general
+     *            the general to set
      */
     public void setGeneral(General general) {
 	if (this.general != null)
 	    this.general.remove();
-        this.general = general;
-        if (general != null)
-            general.apply();
+	this.general = general;
+	if (general != null)
+	    general.apply();
     }
 
     /**
      * Returns the grandDiplomat.
+     * 
      * @return the grandDiplomat
      */
     public GrandDiplomat getGrandDiplomat() {
-        return grandDiplomat;
+	return grandDiplomat;
     }
 
     /**
      * Sets the value of grandDiplomat to that of the parameter.
-     * @param grandDiplomat the grandDiplomat to set
+     * 
+     * @param grandDiplomat
+     *            the grandDiplomat to set
      */
     public void setGrandDiplomat(GrandDiplomat grandDiplomat) {
 	if (this.grandDiplomat != null)
 	    this.grandDiplomat.remove();
-        this.grandDiplomat = grandDiplomat;
-        if (grandDiplomat != null)
-            grandDiplomat.apply();
+	this.grandDiplomat = grandDiplomat;
+	if (grandDiplomat != null)
+	    grandDiplomat.apply();
     }
 
     /**
      * Returns the heir.
+     * 
      * @return the heir
      */
     public Heir getHeir() {
-        return heir;
+	return heir;
     }
 
     /**
      * Sets the value of heir to that of the parameter.
-     * @param heir the heir to set
+     * 
+     * @param heir
+     *            the heir to set
      */
     public void setHeir(Heir heir) {
 	if (this.heir != null)
 	    this.heir.remove();
-        this.heir = heir;
-        if (heir != null)
-            heir.apply();
+	this.heir = heir;
+	if (heir != null)
+	    heir.apply();
     }
 
     /**
      * Returns the highPriest.
+     * 
      * @return the highPriest
      */
     public HighPriest getHighPriest() {
-        return highPriest;
+	return highPriest;
     }
 
     /**
      * Sets the value of highPriest to that of the parameter.
-     * @param highPriest the highPriest to set
+     * 
+     * @param highPriest
+     *            the highPriest to set
      */
     public void setHighPriest(HighPriest highPriest) {
 	if (this.highPriest != null)
 	    this.highPriest.remove();
-        this.highPriest = highPriest;
-        if (highPriest != null)
-            highPriest.apply();
+	this.highPriest = highPriest;
+	if (highPriest != null)
+	    highPriest.apply();
     }
 
     /**
      * Returns the magister.
+     * 
      * @return the magister
      */
     public Magister getMagister() {
-        return magister;
+	return magister;
     }
 
     /**
      * Sets the value of magister to that of the parameter.
-     * @param magister the magister to set
+     * 
+     * @param magister
+     *            the magister to set
      */
     public void setMagister(Magister magister) {
 	if (this.magister != null)
 	    this.magister.remove();
-        this.magister = magister;
-        if (magister != null)
-            magister.apply();
+	this.magister = magister;
+	if (magister != null)
+	    magister.apply();
     }
 
     /**
      * Returns the marshal.
+     * 
      * @return the marshal
      */
     public Marshal getMarshal() {
-        return marshal;
+	return marshal;
     }
 
     /**
      * Sets the value of marshal to that of the parameter.
-     * @param marshal the marshal to set
+     * 
+     * @param marshal
+     *            the marshal to set
      */
     public void setMarshal(Marshal marshal) {
 	if (this.marshal != null)
 	    this.marshal.remove();
-        this.marshal = marshal;
-        if (marshal != null)
-            marshal.apply();
+	this.marshal = marshal;
+	if (marshal != null)
+	    marshal.apply();
     }
 
     /**
      * Returns the royalEnforcer.
+     * 
      * @return the royalEnforcer
      */
     public RoyalEnforcer getRoyalEnforcer() {
-        return royalEnforcer;
+	return royalEnforcer;
     }
 
     /**
      * Sets the value of royalEnforcer to that of the parameter.
-     * @param royalEnforcer the royalEnforcer to set
+     * 
+     * @param royalEnforcer
+     *            the royalEnforcer to set
      */
     public void setRoyalEnforcer(RoyalEnforcer royalEnforcer) {
 	if (this.royalEnforcer != null)
 	    this.royalEnforcer.remove();
-        this.royalEnforcer = royalEnforcer;
-        if (royalEnforcer != null)
-            royalEnforcer.apply();
+	this.royalEnforcer = royalEnforcer;
+	if (royalEnforcer != null)
+	    royalEnforcer.apply();
     }
 
     /**
      * Returns the spymaster.
+     * 
      * @return the spymaster
      */
     public Spymaster getSpymaster() {
-        return spymaster;
+	return spymaster;
     }
 
     /**
      * Sets the value of spymaster to that of the parameter.
-     * @param spymaster the spymaster to set
+     * 
+     * @param spymaster
+     *            the spymaster to set
      */
     public void setSpymaster(Spymaster spymaster) {
 	if (this.spymaster != null)
 	    this.spymaster.remove();
-        this.spymaster = spymaster;
-        if (spymaster != null)
-            spymaster.remove();
+	this.spymaster = spymaster;
+	if (spymaster != null)
+	    spymaster.remove();
     }
 
     /**
      * Returns the treasurer.
+     * 
      * @return the treasurer
      */
     public Treasurer getTreasurer() {
-        return treasurer;
+	return treasurer;
     }
 
     /**
      * Sets the value of treasurer to that of the parameter.
-     * @param treasurer the treasurer to set
+     * 
+     * @param treasurer
+     *            the treasurer to set
      */
     public void setTreasurer(Treasurer treasurer) {
 	if (this.treasurer != null)
 	    this.treasurer.remove();
-        this.treasurer = treasurer;
-        if (treasurer != null)
-            treasurer.apply();
+	this.treasurer = treasurer;
+	if (treasurer != null)
+	    treasurer.apply();
     }
 
     /**
      * Returns the viceroys.
+     * 
      * @return the viceroys
      */
     public Iterable<Viceroy> getViceroys() {
-        return viceroys;
+	return viceroys;
     }
 
     public boolean addViceroy(Viceroy viceroy) {
@@ -341,9 +378,9 @@ public class Government implements Serializable {
 	    return true;
 	}
 	return false;
-	    
+
     }
-    
+
     public boolean removeViceroy(Viceroy viceroy) {
 	if (viceroy != null && viceroys.remove(viceroy)) {
 	    viceroy.remove();
@@ -351,47 +388,53 @@ public class Government implements Serializable {
 	}
 	return false;
     }
-    
+
     /**
      * Returns the warden.
+     * 
      * @return the warden
      */
     public Warden getWarden() {
-        return warden;
+	return warden;
     }
 
     /**
      * Sets the value of warden to that of the parameter.
-     * @param warden the warden to set
+     * 
+     * @param warden
+     *            the warden to set
      */
     public void setWarden(Warden warden) {
 	if (this.warden != null)
 	    this.warden.remove();
-        this.warden = warden;
-        if (warden != null)
-            warden.apply();
+	this.warden = warden;
+	if (warden != null)
+	    warden.apply();
     }
 
     /**
      * Returns the kingdom.
+     * 
      * @return the kingdom
      */
     public Kingdom getKingdom() {
-        return kingdom;
+	return kingdom;
     }
 
     /**
      * Sets the value of kingdom to that of the parameter.
      * Changes the kingdom of every leadership roles in the government.
-     * @param kingdom the kingdom to set
+     * 
+     * @param kingdom
+     *            the kingdom to set
      */
     public void setKingdom(Kingdom kingdom) {
-        this.kingdom = kingdom;
-        
-        // Update the loyalties of the leaders
-        leadersDo((role) -> role.setKingdom(kingdom));
+	this.kingdom = kingdom;
+
+	// Update the loyalties of the leaders
+	leadersDo((role) -> role.setKingdom(kingdom));
     }
-    
+
     public void leadersDo(Consumer<LeadershipRole> action) {
 	for (LeadershipRole ruler : rulers)
 	    action.accept(ruler);

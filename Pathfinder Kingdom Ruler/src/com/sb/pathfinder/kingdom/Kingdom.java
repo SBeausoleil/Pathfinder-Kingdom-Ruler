@@ -19,48 +19,48 @@ public class Kingdom implements Serializable {
 	ECONOMY, LOYALTY, STABILITY;
     }
 
-    private String name;
-    private MoralAlignment moralAlignment;
-    private LawAlignment lawAlignment;
-    private long population;
-    private LinkedList<Tile> tiles;
+    private String		    name;
+    private MoralAlignment	    moralAlignment;
+    private LawAlignment	    lawAlignment;
+    private long		    population;
+    private LinkedList<Tile>	    tiles;
     private Map<String, Settlement> settlements;
-    private int constructionPoints;
+    private int			    constructionPoints;
 
     private int unrest;
 
-    private int economy;
-    private int loyalty;
-    private int stability;
+    private int	economy;
+    private int	loyalty;
+    private int	stability;
 
     private int consumption;
 
-    private int glory;
-    private int infamy;
+    private int	glory;
+    private int	infamy;
 
     private Government government;
 
-    private HolidayEdict holidayEdict;
+    private HolidayEdict   holidayEdict;
     private PromotionEdict promotionEdict;
-    private TaxationEdict taxationEdict;
+    private TaxationEdict  taxationEdict;
     // Improvement edict is selected on call of getImprovementEdict() to take into account all changes in kingdom size
 
-    public Kingdom(String name, MoralAlignment moralAlignment, LawAlignment lawAlignment, Government government) {
-	this(name, moralAlignment, lawAlignment, government, HolidayEdict.NO_HOLIDAYS, PromotionEdict.NONE,
+    public Kingdom(String name, MoralAlignment moralAlignment, LawAlignment lawAlignment) {
+	this(name, moralAlignment, lawAlignment, HolidayEdict.NO_HOLIDAYS, PromotionEdict.NONE,
 		TaxationEdict.NONE);
     }
 
-    public Kingdom(String name, MoralAlignment moralAlignment, LawAlignment lawAlignment, Government government,
+    public Kingdom(String name, MoralAlignment moralAlignment, LawAlignment lawAlignment,
 	    HolidayEdict holidayEdict, PromotionEdict promotionEdict, TaxationEdict taxationEdict) {
 	this.name = name;
 	this.moralAlignment = moralAlignment;
 	this.lawAlignment = lawAlignment;
-	this.government = government;
 	this.holidayEdict = holidayEdict;
 	this.promotionEdict = promotionEdict;
 	this.taxationEdict = taxationEdict;
 	tiles = new LinkedList<Tile>();
 	settlements = new HashMap<String, Settlement>();
+	this.government = new Government(this);
     }
 
     /**
@@ -540,5 +540,14 @@ public class Kingdom implements Serializable {
 
     public Settlement getSettlement(String name) {
 	return settlements.get(name);
+    }
+
+    public void replaceAll(Building originalBuilding, Building building) {
+	for (Settlement settlement : settlements.values())
+	    settlement.replaceAll(originalBuilding, building);
+    }
+
+    public static void main(String[] args) {
+	Kingdom kingdom = new Kingdom("Salmanie", MoralAlignment.NEUTRAL, LawAlignment.NEUTRAL);
     }
 }

@@ -14,16 +14,17 @@ public class Settlement {
 
     // TODO find some way to represent the location of buildings toward one another
     private List<Building> buildings;
-    private int availableLots;
-    private int nDistricts;
 
-    private int corruption;
-    private int criminality;
-    private int law;
-    private int lore;
-    private int productivity;
-    private int society;
-    private int defense;
+    private int	availableLots;
+    private int	nDistricts;   // TODO add a way to modify the nDistricts and availableLots
+
+    private int	corruption;
+    private int	criminality;
+    private int	law;
+    private int	lore;
+    private int	productivity;
+    private int	society;
+    private int	defense;
 
     private int population;
 
@@ -370,9 +371,9 @@ public class Settlement {
      *            the kingdom to set
      */
     public void setKingdom(Kingdom kingdom) {
-	if (kingdom != null)
+	if (this.kingdom != null)
 	    buildingsDo((b) -> {
-		b.removeFrom(kingdom);
+		b.removeFrom(this.kingdom);
 		b.removeFrom(this);
 	    });
 	this.kingdom = kingdom;
@@ -386,13 +387,34 @@ public class Settlement {
     public Iterable<Building> getBuildings() {
 	return buildings;
     }
-    
+
     /**
      * Sends a lambda operation to each buildings in the settlement.
+     * 
      * @param action
      */
     public void buildingsDo(Consumer<Building> action) {
 	for (Building building : buildings)
 	    action.accept(building);
+    }
+
+    public boolean replace(Building originalBuilding, Building building) {
+	// Remove one instance of the original building in the settlement
+	if (removeBuilding(originalBuilding)) {
+	    // Add one instance of the modified building in the settlement
+	    addBuilding(building);
+	    return true;
+	}
+	return false;
+    }
+
+    public boolean replaceAll(Building originalBuilding, Building building) {
+	int buildingsRemoved = 0;
+	while (removeBuilding(originalBuilding))
+	    buildingsRemoved++;
+	boolean removedBuildings = buildingsRemoved != 0;
+	while (buildingsRemoved-- > 0)
+	    addBuilding(building);
+	return removedBuildings;
     }
 }

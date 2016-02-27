@@ -3,24 +3,24 @@ package com.sb.pathfinder.kingdom.app;
 import com.sb.menu.MenuElement;
 import com.sb.pathfinder.kingdom.Kingdom;
 
-public class KingdomStateDisplay implements MenuElement {
+public class KingdomStateDisplay implements MenuElement, KingdomDependant {
     
     private static final long serialVersionUID = -9209212603894469432L;
     
-    private Kingdom kingdom;
+    private Kingdom currentKingdom;
     
     public KingdomStateDisplay(Kingdom kingdom) {
-	this.kingdom = kingdom;
+	this.currentKingdom = kingdom;
     }
     
     @Override
     public void open() {
-	display(kingdom);
+	display(currentKingdom);
     }
 
     public static void display(Kingdom kingdom) {
 	if (kingdom == null) {
-	    System.out.println("Error: No kingdom is set to be seen.");
+	    System.out.println("No kingdom is set to be seen.");
 	    return;
 	}
 	
@@ -47,16 +47,18 @@ public class KingdomStateDisplay implements MenuElement {
      * Returns the kingdom.
      * @return the kingdom
      */
-    public Kingdom getKingdom() {
-        return kingdom;
+    @Override
+    public Kingdom getCurrentKingdom() {
+        return currentKingdom;
     }
 
     /**
      * Sets the value of kingdom to that of the parameter.
      * @param kingdom the kingdom to set
      */
-    public void setKingdom(Kingdom kingdom) {
-        this.kingdom = kingdom;
+    @Override
+    public void setCurrentKingdom(Kingdom kingdom) {
+        this.currentKingdom = kingdom;
     }
 
 }
