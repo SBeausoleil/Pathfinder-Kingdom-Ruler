@@ -1,5 +1,7 @@
 package com.sb.pathfinder.kingdom.government;
 
+import java.io.Serializable;
+
 import com.sb.pathfinder.kingdom.EmptyKingdomModifier;
 import com.sb.pathfinder.kingdom.Kingdom;
 import com.sb.pathfinder.kingdom.KingdomModifier;
@@ -12,7 +14,9 @@ import com.sb.rpg.RPGCharacter;
  * 
  * @author Samuel Beausoleil
  */
-public class LeadershipRole {
+public class LeadershipRole implements Serializable {
+
+    private static final long serialVersionUID = -563822140472865360L;
 
     /**
      * The title of the role.

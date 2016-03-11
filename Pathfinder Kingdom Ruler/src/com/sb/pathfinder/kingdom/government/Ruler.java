@@ -15,6 +15,8 @@ import com.sb.rpg.RPGCharacter;
  */
 public class Ruler extends LeadershipRole {
 
+    private static final long serialVersionUID = 1768627935825417418L;
+
     public Ruler(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
 	setBonus(new RulerBonus());

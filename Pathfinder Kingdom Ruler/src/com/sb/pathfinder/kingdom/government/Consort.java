@@ -13,6 +13,8 @@ import com.sb.rpg.RPGCharacter;
  */
 public class Consort extends LeadershipRole {
 
+    private static final long serialVersionUID = -2368379344203598322L;
+
     public Consort(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
 	setBonus(new ConsortBonus());

@@ -6,6 +6,8 @@ import com.sb.rpg.RPGCharacter;
 
 public class RoyalEnforcer extends LeadershipRole {
 
+    private static final long serialVersionUID = -4031637687091951403L;
+
     public RoyalEnforcer(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
 	setBonus(new RoyalEnforcerBonus());

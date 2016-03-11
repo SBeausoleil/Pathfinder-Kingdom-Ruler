@@ -8,12 +8,15 @@ import com.sb.rpg.RPGCharacter;
 
 public class Spymaster extends LeadershipRole {
 
+    private static final long serialVersionUID = 5947435884473566705L;
+
     public Spymaster(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
 	setBonus(new SpymasterBonus());
 	setPenalty(new SpymasterPenalty());
     }
 
+    @Override
     public SpymasterBonus getBonus() {
 	return (SpymasterBonus) bonus;
     }

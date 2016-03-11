@@ -13,6 +13,8 @@ import com.sb.rpg.RPGCharacter;
  */
 public class Councilor extends LeadershipRole {
 
+    private static final long serialVersionUID = 425193963722886738L;
+
     public Councilor(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
 	setBonus(new CouncilorBonus());

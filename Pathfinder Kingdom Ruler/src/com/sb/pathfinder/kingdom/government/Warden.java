@@ -21,6 +21,8 @@ import com.sb.rpg.RPGCharacter;
  */
 public class Warden extends LeadershipRole {
 
+    private static final long serialVersionUID = -2406350209281065588L;
+
     public Warden(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
 	setBonus(new WardenBonus());

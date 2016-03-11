@@ -7,6 +7,8 @@ import com.sb.rpg.RPGCharacter;
 
 public class Magister extends LeadershipRole {
 
+    private static final long serialVersionUID = 3339813729402004117L;
+    
     public static final int ECONOMY_PENALTY = -2;
     
     public Magister(String title, RPGCharacter character, boolean available, Kingdom kingdom) {

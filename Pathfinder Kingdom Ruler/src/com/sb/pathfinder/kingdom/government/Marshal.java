@@ -7,6 +7,8 @@ import com.sb.rpg.RPGCharacter;
 
 public class Marshal extends LeadershipRole {
 
+    private static final long serialVersionUID = 7116156845531463562L;
+    
     public static final int ECONOMY_PENALTY = -4;
     
     public Marshal(String title, RPGCharacter character, boolean available, Kingdom kingdom) {

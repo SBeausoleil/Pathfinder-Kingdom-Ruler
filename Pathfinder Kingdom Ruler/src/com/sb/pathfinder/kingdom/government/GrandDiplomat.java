@@ -7,6 +7,7 @@ import com.sb.rpg.RPGCharacter;
 
 public class GrandDiplomat extends LeadershipRole {
 
+    private static final long serialVersionUID = -6136619645061955096L;
     public static final int STABILITY_PENALTY = -2;
     
     public GrandDiplomat(String title, RPGCharacter character, boolean available, Kingdom kingdom) {

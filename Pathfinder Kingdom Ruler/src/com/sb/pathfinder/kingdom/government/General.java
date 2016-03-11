@@ -7,6 +7,7 @@ import com.sb.rpg.RPGCharacter;
 
 public class General extends LeadershipRole {
 
+    private static final long serialVersionUID = 4676837781762450095L;
     public static final int LOYALTY_PENALTY = -4;
     
     public General(String title, RPGCharacter character, boolean available, Kingdom kingdom) {

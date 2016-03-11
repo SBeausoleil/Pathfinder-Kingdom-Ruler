@@ -21,6 +21,8 @@ import com.sb.rpg.RPGCharacter;
  */
 public class Viceroy extends LeadershipRole {
 
+    private static final long serialVersionUID = -1771498286966240728L;
+
     public Viceroy(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
 	setBonus(new ViceroyBonus());

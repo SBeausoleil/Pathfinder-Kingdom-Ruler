@@ -8,6 +8,8 @@ import com.sb.rpg.RPGCharacter;
 
 public class Treasurer extends LeadershipRole {
 
+    private static final long serialVersionUID = 1508128157280525063L;
+
     public Treasurer(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
 	// TODO Auto-generated constructor stub

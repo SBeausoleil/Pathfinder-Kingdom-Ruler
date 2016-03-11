@@ -7,6 +7,8 @@ import com.sb.rpg.RPGCharacter;
 
 public class HighPriest extends LeadershipRole {
 
+    private static final long serialVersionUID = 8077238745675927236L;
+
     public HighPriest(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
 	setBonus(new HighPriestBonus());
