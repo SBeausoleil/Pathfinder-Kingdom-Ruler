@@ -546,8 +546,4 @@ public class Kingdom implements Serializable {
 	for (Settlement settlement : settlements.values())
 	    settlement.replaceAll(originalBuilding, building);
     }
-
-    public static void main(String[] args) {
-	Kingdom kingdom = new Kingdom("Salmanie", MoralAlignment.NEUTRAL, LawAlignment.NEUTRAL);
-    }
 }

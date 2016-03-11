@@ -19,6 +19,8 @@ public class AppData implements Serializable {
 
     private static final long serialVersionUID = 7689478362186488340L;
 
+    public static final String FILE_EXTENSION = "kmad";
+    
     private List<Building> buildings;
 
     private Set<Kingdom> kingdoms;

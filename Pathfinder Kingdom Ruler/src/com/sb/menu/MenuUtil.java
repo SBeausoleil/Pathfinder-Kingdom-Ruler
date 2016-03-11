@@ -61,23 +61,27 @@ public class MenuUtil {
 		return Integer.parseInt(input);
 	    }
 	    System.out.println(
-		    "Error: Please enter nothing to return the default value (" + defaultValue + ") or an integer");
+		    "Error: Please enter an integer (writing nothing will return the default value (" + defaultValue + "))");
 	}
     }
 
     public static boolean isInteger(String str) {
-	return str.matches("^[0-9]+$");
+	return str.matches("^-?[0-9]+$");
     }
 
     public static boolean requestYesNo(String question) {
 	while (true) {
 	    System.out.println(question + " [Yes/No]:");
 	    String input = keyboard.nextLine();
-	    if (input.equalsIgnoreCase("yes"))
+	    if (input.equalsIgnoreCase("yes") || input.equalsIgnoreCase("y"))
 		return true;
-	    else if (input.equalsIgnoreCase("no"))
+	    else if (input.equalsIgnoreCase("no") || input.equalsIgnoreCase("n"))
 		return false;
 	    System.out.println("Please answer the question by \"yes\" or \"no\".");
 	}
+    }
+    
+    public static void main(String[] args) {
+	System.out.println("Value returned: " + requestInt("Enter an integer:", 1));
     }
 }

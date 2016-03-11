@@ -35,8 +35,9 @@ public class BuildingDisplay {
 	    LinkedHashMap<Building, LinkedHashMap<String, Integer>> modifiers) {
 	// Find all the modifiers used at least once
 	Set<String> usedModifiers = new LinkedHashSet<>();
-	for (String modifier : ((LinkedHashMap<String, Integer>) (modifiers.values())).keySet())
-	    usedModifiers.add(modifier);
+	for (LinkedHashMap<String, Integer> building : modifiers.values())
+	    for (String modifier : building.keySet())
+		usedModifiers.add(modifier);
 
 	// Build a header containing all the used modifiers
 	ConsoleTable table = new ConsoleTable(getLongestLength(usedModifiers), usedModifiers.size() + 1);

@@ -82,7 +82,7 @@ public class BuildingsManager extends OptionsMenu {
 	else
 	    building = originalBuilding.clone();
 
-	BuildingMaker.editBuilding(building, nameHint(level));
+	BuildingMaker.editBuilding(building, nameHint(level), true);
 
 	if (level == EditLevel.UNIQUE)
 	    settlement.replace(originalBuilding, building);
