@@ -1,8 +1,9 @@
 package com.sb.pathfinder.kingdom.government;
 
+import java.util.LinkedHashMap;
+
 import com.sb.pathfinder.kingdom.HolidayEdict;
 import com.sb.pathfinder.kingdom.Kingdom;
-import com.sb.pathfinder.kingdom.KingdomModifier;
 import com.sb.pathfinder.kingdom.SavedKingdomModifier;
 import com.sb.rpg.RPGCharacter;
 
@@ -21,7 +22,9 @@ public class Councilor extends LeadershipRole {
 	setPenalty(new CouncilorPenalty());
     }
 
-    public class CouncilorBonus extends SavedKingdomModifier {
+    public class CouncilorBonus extends SavedKingdomModifier implements LeaderKingdomModifier {
+
+	private static final long serialVersionUID = -7635578593107579433L;
 
 	@Override
 	public void applyTo(Kingdom kingdom) {
@@ -36,9 +39,23 @@ public class Councilor extends LeadershipRole {
 	    kingdom.modLoyalty(-change);
 	}
 
+	@Override
+	public LinkedHashMap<String, String> describe() {
+	    LinkedHashMap<String, String> description = new LinkedHashMap<>();
+
+	    if (isVacant())
+		description.put("Loyalty", "Charisma|Wisdom modifier");
+	    else
+		description.put("Loyalty", Integer.toString(change));
+
+	    return description;
+	}
+
     }
 
-    public class CouncilorPenalty implements KingdomModifier {
+    public static class CouncilorPenalty implements LeaderKingdomModifier {
+
+	private static final long serialVersionUID = -2878727908316176210L;
 
 	public static final int UNREST_PENALTY = 1;
 
@@ -72,5 +89,14 @@ public class Councilor extends LeadershipRole {
 	    kingdom.modLoyalty(-LOYALTY_PENALTY);
 	}
 
+	@Override
+	public LinkedHashMap<String, String> describe() {
+	    LinkedHashMap<String, String> description = new LinkedHashMap<>();
+	    description.put("Unrest", Integer.toString(UNREST_PENALTY));
+	    description.put("Loyalty", Integer.toString(LOYALTY_PENALTY));
+	    return description;
+	}
+
     }
+
 }

@@ -28,7 +28,7 @@ public class SettlementMenu extends OptionsMenu {
 	// List buildings
 	register("List buildings", () -> BuildingDisplay.display(settlement.getBuildings(), false));
 	// Manage building
-	register("Manage buildings", new BuildingsManager(settlement));
+	register("Manage buildings", new BuildingsManager(null, settlement));
 	// Change owning kingdom
 	register("Change owning kingdom", this::selectKingdom);
 	// Change population

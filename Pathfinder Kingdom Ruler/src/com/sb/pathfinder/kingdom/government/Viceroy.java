@@ -1,5 +1,7 @@
 package com.sb.pathfinder.kingdom.government;
 
+import java.util.LinkedHashMap;
+
 import com.sb.pathfinder.kingdom.Kingdom;
 import com.sb.pathfinder.kingdom.SavedKingdomModifier;
 import com.sb.rpg.RPGCharacter;
@@ -29,7 +31,9 @@ public class Viceroy extends LeadershipRole {
 	// The Viceroy penalty is not yet modelable
     }
 
-    public class ViceroyBonus extends SavedKingdomModifier {
+    public class ViceroyBonus extends SavedKingdomModifier implements LeaderKingdomModifier {
+
+	private static final long serialVersionUID = 8228313896264579800L;
 
 	@Override
 	public void applyTo(Kingdom kingdom) {
@@ -42,6 +46,18 @@ public class Viceroy extends LeadershipRole {
 	@Override
 	public void removeFrom(Kingdom kingdom) {
 	    kingdom.modEconomy(-change);
+	}
+
+	@Override
+	public LinkedHashMap<String, String> describe() {
+	    LinkedHashMap<String, String> description = new LinkedHashMap<>();
+
+	    if (isVacant())
+		description.put("Economy", "Intelligence|Wisdom modifier");
+	    else
+		description.put("Economy", Integer.toString(change));
+
+	    return description;
 	}
 
     }

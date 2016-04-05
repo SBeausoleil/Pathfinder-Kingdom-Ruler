@@ -1,12 +1,11 @@
 package com.sb.pathfinder.kingdom;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.sb.util.ConsoleTable;
+import com.sb.util.ConsoleTables;
+import com.sb.util.Strings;
 
 public class BuildingDisplay {
 
@@ -25,42 +24,10 @@ public class BuildingDisplay {
     }
 
     public static void displayKingdomModifiers(Iterable<Building> buildings, boolean displayCost) {
-	LinkedHashMap<Building, LinkedHashMap<String, Integer>> modifiers = getKingdomModifiers(buildings,
+	LinkedHashMap<String, LinkedHashMap<String, String>> modifiers = getKingdomModifiers(buildings,
 		displayCost);
 
-	display(buildings, modifiers);
-    }
-
-    private static void display(Iterable<Building> buildings,
-	    LinkedHashMap<Building, LinkedHashMap<String, Integer>> modifiers) {
-	// Find all the modifiers used at least once
-	Set<String> usedModifiers = new LinkedHashSet<>();
-	for (LinkedHashMap<String, Integer> building : modifiers.values())
-	    for (String modifier : building.keySet())
-		usedModifiers.add(modifier);
-
-	// Build a header containing all the used modifiers
-	ConsoleTable table = new ConsoleTable(getLongestLength(usedModifiers), usedModifiers.size() + 1);
-	table.newRow();
-	// One empty cell
-	table.addField("");
-	// Start building header
-	for (String modifier : usedModifiers)
-	    table.addField(modifier);
-
-	// Each row follow the format: <Building name><modifier1><modifier2>...
-	Iterator<Building> buildingsIterator = buildings.iterator();
-	Integer currentModifier;
-	for (LinkedHashMap<String, Integer> buildingModifiers : modifiers.values()) {
-	    table.newRow();
-	    Building building = buildingsIterator.next();
-	    table.addField(building.getName());
-	    for (String modifier : usedModifiers) {
-		currentModifier = buildingModifiers.get(modifier);
-		table.addField(currentModifier != null ? currentModifier.toString() : "");
-	    }
-	}
-	table.display();
+	ConsoleTables.display(modifiers);
     }
 
     public static void displaySettlementModifiers(Building building) {
@@ -68,21 +35,21 @@ public class BuildingDisplay {
     }
 
     public static void displaySettlementModifiers(Building building, ConsoleTable table, boolean newRow) {
-	Map<String, Integer> content = getSettlementModifiers(building);
+	Map<String, String> content = getSettlementModifiers(building);
 	if (table == null)
-	    table = new ConsoleTable(getLongestLength(content.keySet()), content.size());
+	    table = new ConsoleTable(Strings.getLongestLength(content.keySet()), content.size());
 	addToTable(table, newRow, content);
 	table.display();
     }
 
     public static void displaySettlementModifiers(Iterable<Building> buildings, boolean displayCost) {
-	LinkedHashMap<Building, LinkedHashMap<String, Integer>> modifiers = getSettlementModifiers(buildings,
+	LinkedHashMap<String, LinkedHashMap<String, String>> modifiers = getSettlementModifiers(buildings,
 		displayCost);
 
-	display(buildings, modifiers);
+	ConsoleTables.display(modifiers);
     }
 
-    public static LinkedHashMap<String, Integer> getSettlementModifiers(Building building) {
+    public static LinkedHashMap<String, String> getSettlementModifiers(Building building) {
 	// @formatter:off
 	int corruption	 = building.getCorruption();
 	int criminality	 = building.getCriminality();
@@ -93,30 +60,30 @@ public class BuildingDisplay {
 	int defense	 = building.getDefense();
 	// @formatter:on
 	// If the modifier is non-zero, add it to the content map
-	LinkedHashMap<String, Integer> content = new LinkedHashMap<>();
+	LinkedHashMap<String, String> content = new LinkedHashMap<>();
 	if (corruption != 0)
-	    content.put("Corruption", corruption);
+	    content.put("Corruption", Integer.toString(corruption));
 	if (criminality != 0)
-	    content.put("Criminality", criminality);
+	    content.put("Criminality", Integer.toString(criminality));
 	if (law != 0)
-	    content.put("Law", law);
+	    content.put("Law", Integer.toString(law));
 	if (lore != 0)
-	    content.put("Lore", lore);
+	    content.put("Lore", Integer.toString(lore));
 	if (productivity != 0)
-	    content.put("Productivity", productivity);
+	    content.put("Productivity", Integer.toString(productivity));
 	if (society != 0)
-	    content.put("Society", society);
+	    content.put("Society", Integer.toString(society));
 	if (defense != 0)
-	    content.put("Defense", defense);
+	    content.put("Defense", Integer.toString(defense));
 
 	return content;
     }
 
-    public static LinkedHashMap<Building, LinkedHashMap<String, Integer>> getSettlementModifiers(
+    public static LinkedHashMap<String, LinkedHashMap<String, String>> getSettlementModifiers(
 	    Iterable<Building> buildings, boolean displayCost) {
-	LinkedHashMap<Building, LinkedHashMap<String, Integer>> modifiers = new LinkedHashMap<>();
+	LinkedHashMap<String, LinkedHashMap<String, String>> modifiers = new LinkedHashMap<>();
 	for (Building building : buildings)
-	    modifiers.put(building, getSettlementModifiers(building));
+	    modifiers.put(building.getName(), getSettlementModifiers(building));
 	return modifiers;
     }
 
@@ -126,14 +93,14 @@ public class BuildingDisplay {
 
     public static void displayKingdomModifiers(Building building, boolean displayCost, ConsoleTable table,
 	    boolean newRow) {
-	Map<String, Integer> content = getKingdomModifiers(building, displayCost);
+	Map<String, String> content = getKingdomModifiers(building, displayCost);
 	if (table == null)
-	    table = new ConsoleTable(getLongestLength(content.keySet()), content.size());
+	    table = new ConsoleTable(Strings.getLongestLength(content.keySet()), content.size());
 	addToTable(table, newRow, content);
 	table.display();
     }
 
-    public static LinkedHashMap<String, Integer> getKingdomModifiers(Building building, boolean getCost) {
+    public static LinkedHashMap<String, String> getKingdomModifiers(Building building, boolean getCost) {
 	// Get kingdom modifier
 	// @formatter:off
 	int economy	= building.getEconomy();
@@ -145,37 +112,37 @@ public class BuildingDisplay {
 	int infamy	= building.getInfamy();
 	// @formatter:on
 	// If the modifier is non-zero, add it to the content map
-	LinkedHashMap<String, Integer> content = new LinkedHashMap<>();
+	LinkedHashMap<String, String> content = new LinkedHashMap<>();
 	if (economy != 0)
-	    content.put("Economy", economy);
+	    content.put("Economy", Integer.toString(economy));
 	if (loyalty != 0)
-	    content.put("Loyalty", loyalty);
+	    content.put("Loyalty", Integer.toString(loyalty));
 	if (stability != 0)
-	    content.put("Stability", stability);
+	    content.put("Stability", Integer.toString(stability));
 	if (unrest != 0)
-	    content.put("Unrest", unrest);
+	    content.put("Unrest", Integer.toString(unrest));
 	if (consumption != 0)
-	    content.put("Consumption", consumption);
+	    content.put("Consumption", Integer.toString(consumption));
 	if (glory != 0)
-	    content.put("Glory", glory);
+	    content.put("Glory", Integer.toString(glory));
 	if (infamy != 0)
-	    content.put("Infamy", infamy);
+	    content.put("Infamy", Integer.toString(infamy));
 
 	if (getCost)
-	    content.put("Cost", building.getConstructionCost());
+	    content.put("Cost", Integer.toString(building.getConstructionCost()));
 
 	return content;
     }
 
-    public static LinkedHashMap<Building, LinkedHashMap<String, Integer>> getKingdomModifiers(
+    public static LinkedHashMap<String, LinkedHashMap<String, String>> getKingdomModifiers(
 	    Iterable<Building> buildings, boolean displayCost) {
-	LinkedHashMap<Building, LinkedHashMap<String, Integer>> modifiers = new LinkedHashMap<>();
+	LinkedHashMap<String, LinkedHashMap<String, String>> modifiers = new LinkedHashMap<>();
 	for (Building building : buildings)
-	    modifiers.put(building, getKingdomModifiers(building, displayCost));
+	    modifiers.put(building.getName(), getKingdomModifiers(building, displayCost));
 	return modifiers;
     }
 
-    private static void addToTable(ConsoleTable table, boolean newRow, Map<String, Integer> content) {
+    private static void addToTable(ConsoleTable table, boolean newRow, Map<String, String> content) {
 	if (newRow) {
 	    table.newRow();
 	    // Make header
@@ -183,25 +150,7 @@ public class BuildingDisplay {
 		table.addField(title);
 	    table.newRow();
 	}
-	for (int value : content.values())
-	    table.addField(Integer.toString(value));
-    }
-
-    private static int getLongestLength(Iterable<String> strs) {
-	int length = 0;
-	for (String str : strs)
-	    if (str.length() > length)
-		length = str.length();
-	return length;
-    }
-
-    public static void main(String[] args) {
-	Building building = new Building("Test Building", 5, 16);
-	building.setEconomy(5);
-	building.setUnrest(-2);
-	building.setCriminality(1);
-	building.setProductivity(2);
-	building.setLore(-1);
-	display(building, true);
+	for (String value : content.values())
+	    table.addField(value);
     }
 }

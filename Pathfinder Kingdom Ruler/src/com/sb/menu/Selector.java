@@ -1,43 +1,63 @@
 package com.sb.menu;
 
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.LinkedList;
 
 import com.sb.util.Getter;
 import com.sb.util.IntBracket;
 import com.sb.util.Lists;
 
-public class Selector<E> {
+public class Selector<E> implements Serializable {
+
+    private static final long serialVersionUID = -6242706904024047564L;
 
     public static final Object SELECTION_CANCELLED = null;
 
     public static String exitString = "!";
 
-    private ArrayList<Choice> choices;
+    private LinkedList<Choice> choices;
 
     public Selector() {
-	choices = new ArrayList<Choice>();
+	choices = new LinkedList<Choice>();
     }
 
     public E select() {
 	// Display all the options
-	for (int i = 1; i <= choices.size(); i++)
-	    System.out.println(i + ") " + choices.get(i - 1).name);
+	int i = 1;
+	for (Choice choice : choices) {
+	    if (choice.choice != null) {
+		System.out.println(i + ") " + choices.get(i - 1).name);
+		i++;
+	    } else
+		System.out.println(choice.getName() == null ? "" : choice.getName());
+	}
+	/*
+	 * for (int i = 1; i <= choices.size(); i++)
+	 * System.out.println(i + ") " + choices.get(i - 1).name);
+	 */
 
 	// Ask for number
 	int index = MenuUtil.requestInt("Enter the number of the desired option: ", new IntBracket(1, choices.size()),
 		"Error: the value entered is not valid", exitString);
-	
+
 	if (index == MenuUtil.CANCELLED_ACTION)
 	    return (E) SELECTION_CANCELLED;
-	else
+	else {
+	    index--;// Correct the index to the zero alignment
+	    i = 0;
+	    for (Choice c : choices)
+		if (c.choice != null)
+		    if (i++ == index)
+			return (E) c.choice;
+
 	    return (E) choices.get(index - 1).choice;
+	}
     }
 
     public boolean register(String name, E element) {
 	return choices.add(new Choice(name, element));
     }
-    
+
     public boolean register(Iterable<E> elements, Getter<E, String> nameGenerator) {
 	int startSize = choices.size();
 	for (E element : elements)

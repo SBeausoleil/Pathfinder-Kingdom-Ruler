@@ -1,7 +1,13 @@
 package com.sb.pathfinder.kingdom;
 
-public class KingdomEconomyModifier implements KingdomModifier {
+import java.util.LinkedHashMap;
 
+import com.sb.pathfinder.kingdom.government.LeaderKingdomModifier;
+
+public class KingdomEconomyModifier implements LeaderKingdomModifier {
+
+    private static final long serialVersionUID = 2690120226105746032L;
+    
     private int modifier;
     
     public KingdomEconomyModifier(int modifier) {
@@ -32,6 +38,13 @@ public class KingdomEconomyModifier implements KingdomModifier {
      */
     public void setModifier(int modifier) {
         this.modifier = modifier;
+    }
+
+    @Override
+    public LinkedHashMap<String, String> describe() {
+	LinkedHashMap<String, String> description = new LinkedHashMap<>();
+	description.put("Economy", Integer.toString(modifier));
+	return description;
     }
 
 }

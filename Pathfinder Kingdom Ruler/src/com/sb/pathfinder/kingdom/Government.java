@@ -45,6 +45,7 @@ public class Government implements Serializable {
 
 	//@formatter:off
 	rulers		= new LinkedHashSet<Ruler>();
+	rulers.add(new Ruler("Ruler", null, false, kingdom)); // Need at least one ruler position
 	consorts 	= new LinkedHashSet<Consort>();
 	councilor 	= new Councilor("Councilor", null, false, kingdom);
 	general 	= new General("General", null, false, kingdom);
@@ -454,5 +455,10 @@ public class Government implements Serializable {
 	for (LeadershipRole viceroy : viceroys)
 	    action.accept(viceroy);
 	action.accept(warden);
+    }
+
+    public void checkLoyalties(boolean replace) {
+	// TODO Auto-generated method stub
+	
     }
 }

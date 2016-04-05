@@ -1,7 +1,8 @@
 package com.sb.pathfinder.kingdom.government;
 
+import java.util.LinkedHashMap;
+
 import com.sb.pathfinder.kingdom.Kingdom;
-import com.sb.pathfinder.kingdom.KingdomModifier;
 import com.sb.pathfinder.kingdom.SavedKingdomModifier;
 import com.sb.pathfinder.kingdom.TaxationEdict;
 import com.sb.rpg.RPGCharacter;
@@ -12,10 +13,13 @@ public class Treasurer extends LeadershipRole {
 
     public Treasurer(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
 	super(title, character, available, kingdom);
-	// TODO Auto-generated constructor stub
+	setBonus(new TreasurerBonus());
+	setPenalty(new TreasurerPenalty());
     }
 
-    public class TreasurerBonus extends SavedKingdomModifier {
+    public class TreasurerBonus extends SavedKingdomModifier implements LeaderKingdomModifier {
+
+	private static final long serialVersionUID = 7431075146013386186L;
 
 	@Override
 	public void applyTo(Kingdom kingdom) {
@@ -29,10 +33,24 @@ public class Treasurer extends LeadershipRole {
 	public void removeFrom(Kingdom kingdom) {
 	    kingdom.modEconomy(-change);
 	}
+
+	@Override
+	public LinkedHashMap<String, String> describe() {
+	    LinkedHashMap<String, String> description = new LinkedHashMap<>();
+
+	    if (isVacant())
+		description.put("Economy", "Intelligence|Wisdom modifier");
+	    else
+		description.put("Economy", Integer.toString(change));
+
+	    return description;
+	}
 	
     }
     
-    public class TreasurerPenalty implements KingdomModifier {
+    public static class TreasurerPenalty implements LeaderKingdomModifier {
+
+	private static final long serialVersionUID = -7251169622220161656L;
 
 	public static final int ECONOMY_PENALTY = -4;
 	
@@ -51,6 +69,13 @@ public class Treasurer extends LeadershipRole {
 	    kingdom.modEconomy(-ECONOMY_PENALTY);
 	    kingdom.setTaxationEdict(savedEdict);
 	    savedEdict = null;
+	}
+
+	@Override
+	public LinkedHashMap<String, String> describe() {
+	    LinkedHashMap<String, String> description = new LinkedHashMap<>();
+	    description.put("Economy", Integer.toString(ECONOMY_PENALTY));
+	    return description;
 	}
 	
     }

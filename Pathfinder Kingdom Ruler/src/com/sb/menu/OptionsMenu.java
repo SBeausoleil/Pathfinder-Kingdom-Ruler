@@ -5,16 +5,31 @@ package com.sb.menu;
  * 
  * @author Samuel Beausoleil
  */
-public class OptionsMenu extends Selector<MenuElement> implements MenuElement {
+public class OptionsMenu extends Selector<MenuElement>implements MenuElement {
 
     private static final long serialVersionUID = 6214800139134389544L;
 
+    private boolean loopUntilCancelled;
+
+    public OptionsMenu() {
+	this(false);
+    }
+
+    public OptionsMenu(boolean loopUntilCancelled) {
+	super();
+	this.loopUntilCancelled = loopUntilCancelled;
+    }
+
     @Override
     public void open() {
-	MenuElement selection = select();
+	do {
+	    MenuElement selection = super.select();
 
-	if (selection != Selector.SELECTION_CANCELLED)
-	    selection.open();
+	    if (selection == Selector.SELECTION_CANCELLED)
+		break;
+	    else
+		selection.open();
+	} while (loopUntilCancelled);
     }
 
     public static void main(String[] args) {

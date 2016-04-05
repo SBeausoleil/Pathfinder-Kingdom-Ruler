@@ -1,13 +1,17 @@
 package com.sb.pathfinder.kingdom.app;
 
+import java.util.HashSet;
+
 import com.sb.menu.MenuUtil;
 import com.sb.menu.OptionsMenu;
 import com.sb.menu.Selector;
 import com.sb.pathfinder.kingdom.Building;
 import com.sb.pathfinder.kingdom.BuildingDisplay;
+import com.sb.pathfinder.kingdom.Kingdom;
 import com.sb.pathfinder.kingdom.Settlement;
 
-public class BuildingsManager extends OptionsMenu {
+// TODO evaluate coherence issues in this class
+public class BuildingsManager extends OptionsMenu implements KingdomDependant  {
 
     private static final long serialVersionUID = 1515216141443940212L;
 
@@ -15,10 +19,15 @@ public class BuildingsManager extends OptionsMenu {
 	GLOBAL, KINGDOM, SETTLEMENT, UNIQUE;
     };
 
+    private Kingdom    kingdom;
     private Settlement settlement;
 
-    public BuildingsManager(Settlement settlement) {
+    public BuildingsManager(Kingdom kingdom, Settlement settlement) {
+	this.kingdom = kingdom;
 	this.settlement = settlement;
+
+	if (kingdom == null && settlement != null)
+	    kingdom = settlement.getKingdom();
 
 	buildMenu();
     }
@@ -27,14 +36,29 @@ public class BuildingsManager extends OptionsMenu {
 	// Manage existing buildings
 	register("Manage existing buildings", this::manageExistingBuildings);
 	// Add a building to the settlement
-	register("Add a building to the settlement", this::addBuilding);
+	if (settlement != null)
+	    register("Add a building to the settlement", this::addBuilding);
     }
 
     public void manageExistingBuildings() {
+	// Get the appropriate set of buildings
+	Iterable<Building> buildings = null;
+	if (settlement != null)
+	    buildings = settlement.getBuildings();
+	else if (kingdom != null) {
+	    // WARNING: Potentially performance critical algorithm. Can have a heavy impact on performances.
+	    HashSet<Building> kingdomBuildings = new HashSet<>();
+	    for (Settlement s : kingdom.getSettlements())
+		for (Building b : s.getBuildings())
+		    kingdomBuildings.add(b);
+	    buildings = kingdomBuildings;
+	} else
+	    buildings = AppData.getInstance().getBuildings();
+
 	// List the buildings in the settlement
-	BuildingDisplay.display(settlement.getBuildings(), false);
+	BuildingDisplay.display(buildings, false);
 	// Display the building management menu
-	Building building = queryBuilding(settlement.getBuildings());
+	Building building = queryBuilding(buildings);
 	if (building != null)
 	    manage(building);
     }
@@ -64,8 +88,10 @@ public class BuildingsManager extends OptionsMenu {
 	 */
 	Selector<EditLevel> menu = new Selector<>();
 	menu.register("Global", EditLevel.GLOBAL);
-	menu.register("Kingdom", EditLevel.KINGDOM);
-	menu.register("Settlement", EditLevel.SETTLEMENT);
+	if (kingdom != null)
+	    menu.register("Kingdom", EditLevel.KINGDOM);
+	if (settlement != null)
+	    menu.register("Settlement", EditLevel.SETTLEMENT);
 	menu.register("Unique", EditLevel.UNIQUE);
 
 	EditLevel level = menu.select();
@@ -136,23 +162,14 @@ public class BuildingsManager extends OptionsMenu {
 		    "Error: There is no place in the settlement for the building. Build a new district first.");
     }
 
-    /**
-     * Returns the settlement.
-     * 
-     * @return the settlement
-     */
-    public Settlement getSettlement() {
-	return settlement;
+    @Override
+    public Kingdom getCurrentKingdom() {
+	return kingdom;
     }
 
-    /**
-     * Sets the value of settlement to that of the parameter.
-     * 
-     * @param settlement
-     *            the settlement to set
-     */
-    public void setSettlement(Settlement settlement) {
-	this.settlement = settlement;
+    @Override
+    public void setCurrentKingdom(Kingdom currentKingdom) {
+	this.kingdom = currentKingdom;
     }
 
 }

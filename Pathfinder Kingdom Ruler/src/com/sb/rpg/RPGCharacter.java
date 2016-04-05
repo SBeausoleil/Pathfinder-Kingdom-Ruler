@@ -1,6 +1,8 @@
 package com.sb.rpg;
 
-public abstract class RPGCharacter {
+import java.util.Collection;
+
+public class RPGCharacter {
     
     protected String name;
 
@@ -14,13 +16,13 @@ public abstract class RPGCharacter {
     protected int maxHP;
     protected int currentHP;
 
-    protected FeatsList feats;
+    protected Collection<Feat> feats;
 
     protected int xp;
     protected int level;
 
     public RPGCharacter(String name, int strength, int dexterity, int constitution, int intelligence, int wisdom, int charisma,
-	    int maxHP, FeatsList feats, int xp, int level) {
+	    int maxHP, Collection<Feat> feats, int xp, int level) {
 	this.strength = strength;
 	this.dexterity = dexterity;
 	this.constitution = constitution;
@@ -32,20 +34,6 @@ public abstract class RPGCharacter {
 	this.feats = feats;
 	this.xp = xp;
 	this.level = level;
-    }
-
-    public abstract AbilityList getAbilities();
-
-    public FeatsList getFeats() {
-	return feats;
-    }
-    
-    /**
-     * Sets the value of feats to that of the parameter.
-     * @param feats the feats to set
-     */
-    public void setFeats(FeatsList feats) {
-        this.feats = feats;
     }
 
     /**
@@ -250,5 +238,21 @@ public abstract class RPGCharacter {
     
     public static int getAttributeModifier(int attribute) {
 	return attribute - 10 / 2;
+    }
+
+    /**
+     * Returns the feats.
+     * @return the feats
+     */
+    public Collection<Feat> getFeats() {
+        return feats;
+    }
+
+    /**
+     * Sets the value of feats to that of the parameter.
+     * @param feats the feats to set
+     */
+    public void setFeats(Collection<Feat> feats) {
+        this.feats = feats;
     }
 }

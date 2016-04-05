@@ -1,9 +1,9 @@
 package com.sb.pathfinder.kingdom.government;
 
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 
 import com.sb.pathfinder.kingdom.Kingdom;
-import com.sb.pathfinder.kingdom.KingdomModifier;
 import com.sb.pathfinder.kingdom.SavedKingdomModifier;
 import com.sb.rpg.RPGCharacter;
 
@@ -23,8 +23,9 @@ public class Ruler extends LeadershipRole {
 	setPenalty(new RulerPenalty());
     }
 
-    public class RulerBonus extends SavedKingdomModifier {
+    public class RulerBonus extends SavedKingdomModifier implements LeaderKingdomModifier {
 
+	private static final long serialVersionUID = -168654583637209587L;
 	private HashSet<Kingdom.Attribute> modifiedAttributes;
 
 	public RulerBonus() {
@@ -84,10 +85,33 @@ public class Ruler extends LeadershipRole {
 		}
 	    }
 	}
+
+	@Override
+	public LinkedHashMap<String, String> describe() {
+	    LinkedHashMap<String, String> description = new LinkedHashMap<>();
+
+	    for (Kingdom.Attribute attr : modifiedAttributes) {
+		switch (attr) {
+		case ECONOMY:
+		    description.put("Economy", isVacant() ? "Charisma modifier" : Integer.toString(change));
+		    break;
+		case LOYALTY:
+		    description.put("Loyalty", isVacant() ? "Charisma modifier" : Integer.toString(change));
+		    break;
+		case STABILITY:
+		    description.put("Stability", isVacant() ? "Charisma modifier" : Integer.toString(change));
+		    break;
+		}
+	    }
+	    
+	    return description;
+	}
     }
 
-    public class RulerPenalty implements KingdomModifier {
+    public static class RulerPenalty implements LeaderKingdomModifier {
 
+	private static final long serialVersionUID = -2370687647465958372L;
+	
 	public static final int UNREST_PENALTY = 4;
 
 	/**
@@ -104,6 +128,13 @@ public class Ruler extends LeadershipRole {
 
 	@Override
 	public void removeFrom(Kingdom kingdom) {
+	}
+
+	@Override
+	public LinkedHashMap<String, String> describe() {
+	    LinkedHashMap<String, String> description = new LinkedHashMap<>();
+	    description.put("Unrest", "+" + UNREST_PENALTY + "/turn");
+	    return description;
 	}
     }
 }

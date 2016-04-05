@@ -25,17 +25,17 @@ public class AppData implements Serializable {
 
     private Set<Kingdom> kingdoms;
 
-    private Set<RPGCharacter> characters;
+    private List<RPGCharacter> characters;
 
     private static AppData instance;
 
     private AppData() {
 	buildings = new LinkedList<Building>();
 	kingdoms = new LinkedHashSet<Kingdom>();
-	characters = new LinkedHashSet<RPGCharacter>();
+	characters = new LinkedList<RPGCharacter>();
     }
 
-    public AppData(List<Building> buildings, Set<Kingdom> kingdoms, Set<RPGCharacter> characters)
+    public AppData(List<Building> buildings, Set<Kingdom> kingdoms, List<RPGCharacter> characters)
 	    throws AlreadyInstancedException {
 	if (instance != null)
 	    throw new AlreadyInstancedException(AppData.class);
@@ -88,7 +88,7 @@ public class AppData implements Serializable {
      * 
      * @return the characters
      */
-    public Set<RPGCharacter> getCharacters() {
+    public List<RPGCharacter> getCharacters() {
 	return characters;
     }
 
@@ -98,7 +98,7 @@ public class AppData implements Serializable {
      * @param characters
      *            the characters to set
      */
-    public void setCharacters(Set<RPGCharacter> characters) {
+    public void setCharacters(List<RPGCharacter> characters) {
 	this.characters = characters;
     }
 

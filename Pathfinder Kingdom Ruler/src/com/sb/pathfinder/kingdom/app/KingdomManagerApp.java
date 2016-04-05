@@ -22,7 +22,7 @@ public class KingdomManagerApp implements KingdomDependant, MenuElement {
     private static final long serialVersionUID = -2199803296265328815L;
 
     public static final File SAVES_DIRECTORY = new File("saves");
-    
+
     public static final JFileChooser FILE_CHOOSER = makeAppFileChooser();
 
     private Kingdom			 currentKingdom;
@@ -41,8 +41,13 @@ public class KingdomManagerApp implements KingdomDependant, MenuElement {
 	registerMenuElement("Make a new kingdom", new KingdomMaker());
 	registerMenuElement("Select a kingdom", new KingdomSelector(this));
 	registerMenuElement("Create a building", () -> BuildingMaker.createBuilding(true));
+	registerMenuElement("Edit a building", new BuildingsManager(currentKingdom, null));
 	registerMenuElement("List all buildings",
 		() -> BuildingDisplay.display(AppData.getInstance().getBuildings(), true));
+	registerMenuElement("Create a new character",
+		() -> AppData.getInstance().getCharacters().add(CharacterMaker.makeCharacter()));
+	registerMenuElement("Edit a character", new CharacterManager());
+	//registerMenuElement("Access government", new GovernmentManager());
 	registerMenuElement("Save", this::save);
 	registerMenuElement("Save at", this::saveAt);
 	registerMenuElement("Save and exit", () -> {
@@ -133,16 +138,38 @@ public class KingdomManagerApp implements KingdomDependant, MenuElement {
     }
 
     private boolean selectSaveFile() {
-	System.out.println("Querying the user file");
 	if (FILE_CHOOSER.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
 	    File tempSave = FILE_CHOOSER.getSelectedFile();
 	    if (!tempSave.getName().endsWith(AppData.FILE_EXTENSION))
 		tempSave = new File(tempSave.getName() + AppData.FILE_EXTENSION);
-	    if (tempSave.exists())
-		
-	    return true;
+	    if (!tempSave.exists()) {
+		save = tempSave;
+		return true;
+	    } else {
+		System.out.println("The file already exists.");
+		return true; // FIXME
+	    }
 	}
 	return false;
+    }
+
+    /**
+     * Returns the save.
+     * 
+     * @return the save
+     */
+    public File getSave() {
+	return save;
+    }
+
+    /**
+     * Sets the value of save to that of the parameter.
+     * 
+     * @param save
+     *            the save to set
+     */
+    public void setSave(File save) {
+	this.save = save;
     }
 
     public static void main(String[] args) {
@@ -154,36 +181,38 @@ public class KingdomManagerApp implements KingdomDependant, MenuElement {
 	// Else
 	//	Offer to make a new save or select an existing one
 
+	File save = null;
 	if (SAVES_DIRECTORY.list((dir, fileName) -> fileName.endsWith(AppData.FILE_EXTENSION)).length > 0) {
 	    if (MenuUtil.requestYesNo("There exists save(s) of the application. Do you want to load one?"))
-		restoreAppData();
-	    else
-		System.out.println("Creating a new save");
-	} else
-	    System.out.println("Creating a new save");
+		save = restoreAppData();
+	}
+
 	KingdomManagerApp app = new KingdomManagerApp();
+	if (save == null) {
+	    System.out.println("Creating a new save");
+	    app.setSave(save);
+	}
 	app.open();
     }
 
-    private static void restoreAppData() {
+    private static File restoreAppData() {
 	// open a GUI to select the save
-	System.out.println("Got the gui");
+	File save = null;
 	if (FILE_CHOOSER.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 	    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(FILE_CHOOSER.getSelectedFile()))) {
 		AppData.setInstance((AppData) in.readObject());
+		save = FILE_CHOOSER.getSelectedFile();
 	    } catch (ClassNotFoundException | AlreadyInstancedException | IOException e) {
 		System.err.println("Error when reading the application save.");
 		e.printStackTrace();
 	    }
-	} else
-	    System.out.println("Creating a new save");
+	}
+	return save;
     }
 
     private static JFileChooser makeAppFileChooser() {
-	System.out.println("makeAppFileChooser()");
 	JFileChooser chooser = new JFileChooser(SAVES_DIRECTORY);
 	chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-	System.out.println("AppData.FILE_EXTENSION == " + AppData.FILE_EXTENSION);
 	chooser.setFileFilter(new FileNameExtensionFilter("Kingdom Manager App Data", AppData.FILE_EXTENSION));
 	return chooser;
     }

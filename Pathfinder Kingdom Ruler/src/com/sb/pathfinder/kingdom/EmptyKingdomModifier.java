@@ -6,8 +6,10 @@ package com.sb.pathfinder.kingdom;
  * @author Samuel Beausoleil
  *
  */
-public final class EmptyKingdomModifier implements KingdomModifier {
+public final class EmptyKingdomModifier implements SerializableKingdomModifier {
 
+    private static final long serialVersionUID = -4086513925346567040L;
+    
     private static final EmptyKingdomModifier INSTANCE = new EmptyKingdomModifier();
     
     public static EmptyKingdomModifier getInstance() {

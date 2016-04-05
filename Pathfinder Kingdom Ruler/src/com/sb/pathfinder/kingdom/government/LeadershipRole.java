@@ -1,10 +1,10 @@
 package com.sb.pathfinder.kingdom.government;
 
 import java.io.Serializable;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 
-import com.sb.pathfinder.kingdom.EmptyKingdomModifier;
 import com.sb.pathfinder.kingdom.Kingdom;
-import com.sb.pathfinder.kingdom.KingdomModifier;
 import com.sb.rpg.RPGCharacter;
 
 /**
@@ -14,9 +14,9 @@ import com.sb.rpg.RPGCharacter;
  * 
  * @author Samuel Beausoleil
  */
-public class LeadershipRole implements Serializable {
+public abstract class LeadershipRole implements Serializable {
 
-    private static final long serialVersionUID = -563822140472865360L;
+    private static final long serialVersionUID = -8226566758974968846L;
 
     /**
      * The title of the role.
@@ -43,26 +43,26 @@ public class LeadershipRole implements Serializable {
      * The bonus applied to a kingdom.
      * The bonus is to be applied when a kingdom has this role fulfilled.
      */
-    protected KingdomModifier bonus;
+    protected LeaderKingdomModifier bonus;
 
     /**
      * The penalty applied to a kingdom.
      * The penalty is to be applied when a kingdom does not have this role fulfilled.
      */
-    protected KingdomModifier penalty;
+    protected LeaderKingdomModifier penalty;
 
     /**
      * The current effect applied on the kingdom.
      */
-    private KingdomModifier currentEffect;
+    private LeaderKingdomModifier currentEffect;
 
     public LeadershipRole(String title, RPGCharacter character, boolean available, Kingdom kingdom) {
-	this(title, character, available, kingdom, EmptyKingdomModifier.getInstance(),
-		EmptyKingdomModifier.getInstance());
+	this(title, character, available, kingdom, EmptyLeaderKingdomModifier.getInstance(),
+		EmptyLeaderKingdomModifier.getInstance());
     }
 
     public LeadershipRole(String title, RPGCharacter character, boolean available, Kingdom kingdom,
-	    KingdomModifier bonus, KingdomModifier penalty) {
+	    LeaderKingdomModifier bonus, LeaderKingdomModifier penalty) {
 	this.title = title;
 	this.character = character;
 	this.available = available;
@@ -116,7 +116,7 @@ public class LeadershipRole implements Serializable {
      * 
      * @return the bonus
      */
-    public KingdomModifier getBonus() {
+    public LeaderKingdomModifier getBonus() {
 	return bonus;
     }
 
@@ -126,7 +126,7 @@ public class LeadershipRole implements Serializable {
      * @param bonus
      *            the bonus to set
      */
-    public final void setBonus(KingdomModifier bonus) {
+    public final void setBonus(LeaderKingdomModifier bonus) {
 	remove();
 	this.bonus = bonus;
 	apply();
@@ -137,7 +137,7 @@ public class LeadershipRole implements Serializable {
      * 
      * @return the penalty
      */
-    public KingdomModifier getPenalty() {
+    public LeaderKingdomModifier getPenalty() {
 	return penalty;
     }
 
@@ -147,7 +147,7 @@ public class LeadershipRole implements Serializable {
      * @param penalty
      *            the penalty to set
      */
-    public final void setPenalty(KingdomModifier penalty) {
+    public final void setPenalty(LeaderKingdomModifier penalty) {
 	remove();
 	this.penalty = penalty;
 	apply();
@@ -243,7 +243,21 @@ public class LeadershipRole implements Serializable {
      * 
      * @return the currentEffect
      */
-    public KingdomModifier getCurrentEffect() {
+    public LeaderKingdomModifier getCurrentEffect() {
 	return currentEffect;
+    }
+
+    public void displayProperties() {
+	System.out.println("Title: " + title);
+	System.out.println("Character: " + character != null ? character.getName() : "This post is vacant");
+	System.out.println(available ? "The person in charge of this role is available to fulfill their functions."
+		: "The person in charge of this role is not available to fulfill their functions.");
+	System.out.println("Kingdom: " + kingdom != null ? kingdom.getName() : "");
+	System.out.println("Current effect(s): ");
+	LinkedHashMap<String, String> description = currentEffect.describe();
+	Iterator<String> keys = description.keySet().iterator();
+	Iterator<String> values = description.values().iterator();
+	while (keys.hasNext())
+	    System.out.println(" -> " + keys.next() + ": " + values.next());
     }
 }

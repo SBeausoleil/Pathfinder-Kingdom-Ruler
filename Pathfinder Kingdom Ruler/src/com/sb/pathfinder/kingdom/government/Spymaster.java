@@ -1,8 +1,9 @@
 package com.sb.pathfinder.kingdom.government;
 
+import java.util.LinkedHashMap;
+
 import com.sb.pathfinder.kingdom.Kingdom;
 import com.sb.pathfinder.kingdom.Kingdom.Attribute;
-import com.sb.pathfinder.kingdom.KingdomModifier;
 import com.sb.pathfinder.kingdom.SavedKingdomModifier;
 import com.sb.rpg.RPGCharacter;
 
@@ -21,8 +22,10 @@ public class Spymaster extends LeadershipRole {
 	return (SpymasterBonus) bonus;
     }
 
-    public class SpymasterBonus extends SavedKingdomModifier {
+    public class SpymasterBonus extends SavedKingdomModifier implements LeaderKingdomModifier {
 
+	private static final long serialVersionUID = -2451943251181465716L;
+	
 	private Kingdom.Attribute affectedAttribute;
 
 	public SpymasterBonus() {
@@ -80,10 +83,31 @@ public class Spymaster extends LeadershipRole {
 	    this.affectedAttribute = affectedAttribute;
 	}
 
+	@Override
+	public LinkedHashMap<String, String> describe() {
+	    LinkedHashMap<String, String> description = new LinkedHashMap<>();
+
+	    switch(affectedAttribute) {
+	    case ECONOMY:
+		description.put("Economy", isVacant() ? "Intelligence|Dexterity modifier" : Integer.toString(change));
+		break;
+	    case LOYALTY:
+		description.put("Loyalty", isVacant() ? "Intelligence|Dexterity modifier" : Integer.toString(change));
+		break;
+	    case STABILITY:
+		description.put("Stability", isVacant() ? "Intelligence|Dexterity modifier" : Integer.toString(change));
+		break;
+	    }
+	    
+	    return description;
+	}
+
     }
 
-    public class SpymasterPenalty implements KingdomModifier {
+    public static class SpymasterPenalty implements LeaderKingdomModifier {
 
+	private static final long serialVersionUID = 7287718208028442683L;
+	
 	public static final int ECONOMY_PENALTY = -4;
 	public static final int UNREST_PENALTY = 1;
 
@@ -102,6 +126,14 @@ public class Spymaster extends LeadershipRole {
 	public void removeFrom(Kingdom kingdom) {
 	    kingdom.modEconomy(-ECONOMY_PENALTY);
 	    economyPenaltyApplied = false;
+	}
+
+	@Override
+	public LinkedHashMap<String, String> describe() {
+	    LinkedHashMap<String, String> description = new LinkedHashMap<>();
+	    description.put("Economy", Integer.toString(ECONOMY_PENALTY));
+	    description.put("Unrest", Integer.toString(UNREST_PENALTY));
+	    return description;
 	}
 
     }

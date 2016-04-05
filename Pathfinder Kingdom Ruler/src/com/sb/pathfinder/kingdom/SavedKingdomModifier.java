@@ -6,7 +6,9 @@ package com.sb.pathfinder.kingdom;
  * @author Samuel Beausoleil
  *
  */
-public abstract class SavedKingdomModifier implements KingdomModifier {
+public abstract class SavedKingdomModifier implements SerializableKingdomModifier {
+    
+    private static final long serialVersionUID = 3385602197174228218L;
     
     protected int change;
 
