@@ -52,7 +52,7 @@ public class SettlementMenu extends OptionsMenu {
     }
 
     public void selectKingdom() {
-	Selector<Kingdom> kingdoms = new Selector<>();
+	Selector<Kingdom> kingdoms = new Selector<>(true);
 	for (Kingdom kingdom : AppData.getInstance().getKingdoms())
 	    kingdoms.register(kingdom.getName(), kingdom);
 	kingdoms.register("None", null);

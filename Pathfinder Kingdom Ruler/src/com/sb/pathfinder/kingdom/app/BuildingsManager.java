@@ -86,7 +86,7 @@ public class BuildingsManager extends OptionsMenu implements KingdomDependant  {
 	 * - Settlement
 	 * - Unique
 	 */
-	Selector<EditLevel> menu = new Selector<>();
+	Selector<EditLevel> menu = new Selector<>(true);
 	menu.register("Global", EditLevel.GLOBAL);
 	if (kingdom != null)
 	    menu.register("Kingdom", EditLevel.KINGDOM);

@@ -154,7 +154,7 @@ public abstract class LeadershipRole implements Serializable {
     }
 
     /**
-     * Returns the available.
+     * Returns the availability of the character.
      * 
      * @return the available
      */

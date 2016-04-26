@@ -1,6 +1,7 @@
 package com.sb.pathfinder.kingdom;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.function.Consumer;
 
@@ -45,7 +46,7 @@ public class Government implements Serializable {
 
 	//@formatter:off
 	rulers		= new LinkedHashSet<Ruler>();
-	rulers.add(new Ruler("Ruler", null, false, kingdom)); // Need at least one ruler position
+	rulers.add(new Ruler("Ruler", null, false, kingdom)); // Needs at least one ruler position
 	consorts 	= new LinkedHashSet<Consort>();
 	councilor 	= new Councilor("Councilor", null, false, kingdom);
 	general 	= new General("General", null, false, kingdom);
@@ -457,8 +458,48 @@ public class Government implements Serializable {
 	action.accept(warden);
     }
 
-    public void checkLoyalties(boolean replace) {
-	// TODO Auto-generated method stub
+    /**
+     * Checks if any role(s) needs to be replaced by a new instance.
+     * The determinant for a replacement is if the kingdom variable within the role
+     * does not match the kingdom of this government.
+     */
+    public void checkLoyalties() {
+	// Check those with multiple instances
+	checkLoyalties(rulers.iterator());
+	if (rulers.isEmpty())
+	    // Insert an empty ruler
+	    rulers.add(new Ruler("Ruler", null, false, kingdom));
+	checkLoyalties(consorts.iterator());
+	checkLoyalties(viceroys.iterator());
 	
+	// Check those with a single instance
+	if (!councilor.getKingdom().equals(kingdom))
+	    councilor = new Councilor("Councilor", null, false, kingdom);
+	if (!general.getKingdom().equals(kingdom))
+	    general = new General("General", null, false, kingdom);
+	if (!grandDiplomat.getKingdom().equals(kingdom))
+	    grandDiplomat = new GrandDiplomat("Grand Diplomat", null, false, kingdom);
+	if (!heir.getKingdom().equals(kingdom))
+	    heir = new Heir("Heir", null, false, kingdom);
+	if (!highPriest.getKingdom().equals(kingdom))
+	    highPriest = new HighPriest("High Priest", null, false, kingdom);
+	if (!magister.getKingdom().equals(kingdom))
+	    magister = new Magister("Magister", null, false, kingdom);
+	if (!marshal.getKingdom().equals(kingdom))
+	    marshal = new Marshal("Marshal", null, false, kingdom);
+	if (!royalEnforcer.getKingdom().equals(kingdom))
+	    royalEnforcer = new RoyalEnforcer("Royal Enforcer", null, false, kingdom);
+	if (spymaster.getKingdom().equals(kingdom))
+	    spymaster = new Spymaster("Spymaster", null, false, kingdom);
+	if (!treasurer.getKingdom().equals(kingdom))
+	    treasurer = new Treasurer("Treasurer", null, false, kingdom);
+	if (!warden.getKingdom().equals(kingdom))
+	    warden = new Warden("Warden", null, false, kingdom);
+    }
+    
+    private void checkLoyalties(Iterator<? extends LeadershipRole> iterator) {
+	while (iterator.hasNext())
+	    if (!iterator.next().getKingdom().equals(kingdom))
+		iterator.remove();
     }
 }

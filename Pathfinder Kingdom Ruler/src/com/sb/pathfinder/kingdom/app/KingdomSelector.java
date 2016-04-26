@@ -16,7 +16,7 @@ public class KingdomSelector implements MenuElement {
 
     @Override
     public void open() {
-	Selector<Kingdom> kingdoms = new Selector<>();
+	Selector<Kingdom> kingdoms = new Selector<>(true);
 	kingdoms.register(AppData.getInstance().getKingdoms(), Kingdom::getName);
 	Kingdom selection = kingdoms.select();
 	if (selection != Selector.SELECTION_CANCELLED)

@@ -8,37 +8,38 @@ import com.sb.pathfinder.kingdom.Government;
 import com.sb.pathfinder.kingdom.Kingdom;
 import com.sb.pathfinder.kingdom.government.GovernmentDisplay;
 import com.sb.pathfinder.kingdom.government.LeadershipRole;
+import com.sb.rpg.RPGCharacter;
 
 public class GovernmentManager implements MenuElement, KingdomDependant {
 
     private static final long serialVersionUID = -7537862739742959788L;
-    
-    private static final byte RULERS_OPTION = (byte) 0;
-    private static final byte CONSORTS_OPTION = (byte) 1;
+
+    private static final byte RULERS_OPTION    = (byte) 0;
+    private static final byte CONSORTS_OPTION  = (byte) 1;
     private static final byte VICEROYS_OPTIONS = (byte) 2;
-    
-    private Kingdom currentKingdom;    
-    
+
+    private Kingdom currentKingdom;
+
     public GovernmentManager(Kingdom currentKingdom) {
 	this.currentKingdom = currentKingdom;
     }
-    
+
     @Override
     public void open() {
 	if (currentKingdom == null) {
-	    System.out.println("A kingdom need to be selected first.");
+	    System.out.println("A kingdom needs to be selected first.");
 	    return;
 	}
-	
+
 	GovernmentDisplay.displayCurrentEffects(currentKingdom.getGovernment());
-	
+
 	OptionsMenu menu = new OptionsMenu();
 	menu.register("Display bonuses", () -> GovernmentDisplay.displayBonuses(currentKingdom.getGovernment()));
 	menu.register("Display penalties", () -> GovernmentDisplay.displayPenalties(currentKingdom.getGovernment()));
 	menu.register("Edit roles", this::editRoles);
-	
+
     }
-    
+
     public void editRoles() {
 	// Choices:
 	/*
@@ -49,7 +50,7 @@ public class GovernmentManager implements MenuElement, KingdomDependant {
 	 * 1.3- If that role is a list, add a new role to it
 	 */
 	Government gov = currentKingdom.getGovernment();
-	Selector<Object> roles = new Selector<>();
+	Selector<Object> roles = new Selector<>(true);
 	roles.register("Ruler(s)", RULERS_OPTION);
 	roles.register("Consort(s)", CONSORTS_OPTION);
 	roles.register("Councilor", gov.getCouncilor());
@@ -63,7 +64,7 @@ public class GovernmentManager implements MenuElement, KingdomDependant {
 	roles.register("Treasurer", gov.getTreasurer());
 	roles.register("Viceroys", VICEROYS_OPTIONS);
 	roles.register("Warden", gov.getWarden());
-	
+
 	Object selection = roles.select();
 	if (selection == Selector.SELECTION_CANCELLED)
 	    return;
@@ -81,32 +82,49 @@ public class GovernmentManager implements MenuElement, KingdomDependant {
 	// Display all relevant data concerning this role
 	role.displayProperties();
 	System.out.println();
+	Selector<MenuElement> menu = makeRoleEditionMenu(role);
+	MenuElement selection = menu.select();
 	
+	if (selection != Selector.SELECTION_CANCELLED)
+	    selection.open();
+    }
+
+    private Selector<MenuElement> makeRoleEditionMenu(LeadershipRole role) {
 	// Make it possible to edit each one of the role's properties.
-	OptionsMenu menu = new OptionsMenu();
+	Selector<MenuElement> menu = new Selector<MenuElement>(true);
 	menu.register("Edit title", () -> editTitle(role));
 	menu.register("Change character", () -> editCharacter(role));
 	menu.register("Change availability", () -> editAvailablity(role));
 	menu.register("Change kingdom", () -> editKingdom(role));
+	return menu;
     }
 
     private void editCharacter(LeadershipRole role) {
-	// TODO Auto-generated method stub
+	System.out.println(
+		"Current character: " + (role.getCharacter() != null ? role.getCharacter().getName() : "None"));
+	System.out.println("Select the new character for this role:");
+	Selector<RPGCharacter> characters = new Selector<>(true);
+	characters.register(AppData.getInstance().getCharacters(), RPGCharacter::getName);
+	RPGCharacter selection = characters.select();
+	if (selection == Selector.SELECTION_CANCELLED)
+	    return;
+
+	role.setCharacter(selection);
     }
 
     private void editKingdom(LeadershipRole role) {
 	System.out.println("Current kingdom: " + (role.getKingdom() != null ? role.getKingdom().getName() : "None"));
-	System.out.println("Select the new kingdom of this role: ");
-	Selector<Kingdom> kingdoms = new Selector<>();
+	System.out.println("Select the new kingdom of this role:");
+	Selector<Kingdom> kingdoms = new Selector<>(true);
 	kingdoms.register(AppData.getInstance().getKingdoms(), Kingdom::getName);
 	Kingdom selection = kingdoms.select();
 	if (selection == Selector.SELECTION_CANCELLED)
 	    return;
-	
+
 	role.setKingdom(selection);
-	
+
 	if (!selection.equals(currentKingdom))
-	    currentKingdom.getGovernment().checkLoyalties(false);
+	    currentKingdom.getGovernment().checkLoyalties();
     }
 
     private void editAvailablity(LeadershipRole role) {

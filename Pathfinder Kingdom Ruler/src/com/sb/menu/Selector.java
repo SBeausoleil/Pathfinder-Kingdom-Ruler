@@ -16,9 +16,16 @@ public class Selector<E> implements Serializable {
     public static String exitString = "!";
 
     private LinkedList<Choice> choices;
+    
+    private boolean allowCancel;
 
     public Selector() {
-	choices = new LinkedList<Choice>();
+	this(false);
+    }
+    
+    public Selector(boolean allowCancel) {
+	choices = new LinkedList<>();
+	this.allowCancel = allowCancel;
     }
 
     public E select() {
@@ -37,13 +44,19 @@ public class Selector<E> implements Serializable {
 	 */
 
 	// Ask for number
-	int index = MenuUtil.requestInt("Enter the number of the desired option: ", new IntBracket(1, choices.size()),
-		"Error: the value entered is not valid", exitString);
-
+	int index;
+	
+	if (allowCancel)
+	    index = MenuUtil.requestInt("Enter the number of the desired option (" + exitString + " to cancel): ", new IntBracket(1, choices.size()),
+			"Error: the value entered is not valid", exitString);
+	else
+	    index = MenuUtil.requestInt("Enter the number of the desired option: ", new IntBracket(1, choices.size()),
+		    "Error: The value entered is not valid");
+	    
 	if (index == MenuUtil.CANCELLED_ACTION)
 	    return (E) SELECTION_CANCELLED;
 	else {
-	    index--;// Correct the index to the zero alignment
+	    index--; // Correct the index to the zero alignment
 	    i = 0;
 	    for (Choice c : choices)
 		if (c.choice != null)
@@ -105,5 +118,21 @@ public class Selector<E> implements Serializable {
 	public Object getChoice() {
 	    return choice;
 	}
+    }
+
+    /**
+     * Returns the allowCancel.
+     * @return the allowCancel
+     */
+    public boolean isAllowCancel() {
+        return allowCancel;
+    }
+
+    /**
+     * Sets the value of allowCancel to that of the parameter.
+     * @param allowCancel the allowCancel to set
+     */
+    public void setAllowCancel(boolean allowCancel) {
+        this.allowCancel = allowCancel;
     }
 }

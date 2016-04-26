@@ -10,7 +10,7 @@ public class CharacterManager implements MenuElement {
 
     @Override
     public void open() {
-	Selector<RPGCharacter> characters = new Selector<>();
+	Selector<RPGCharacter> characters = new Selector<>(true);
 	characters.register(AppData.getInstance().getCharacters(), RPGCharacter::getName);
 	RPGCharacter selection = characters.select();
 	if (selection != Selector.SELECTION_CANCELLED)
